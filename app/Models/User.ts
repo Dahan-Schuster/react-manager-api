@@ -7,6 +7,7 @@ import {
   HasOne,
   hasOne,
 } from "@ioc:Adonis/Lucid/Orm";
+import ApiError from "App/Exceptions/ApiError";
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -46,6 +47,23 @@ export default class User extends BaseModel {
   public static async hashPassword(user: User) {
     if (user.$dirty.password) {
       user.password = await Hash.make(user.password);
+    }
+
+    // valida email ao editar
+    if (user.$dirty.email) {
+      const query = User.query().where("email", user.email);
+      if (user.id) {
+        query.whereNot("id", user.id);
+      }
+
+      const userWithEmail = await query.first();
+
+      if (userWithEmail) {
+        throw new ApiError(
+          "Este e-mail já está sendo utilizado por outro usuário",
+          400
+        );
+      }
     }
   }
 }

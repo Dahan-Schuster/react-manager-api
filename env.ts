@@ -34,4 +34,7 @@ export default Env.rules({
   SMTP_PASSWORD: Env.schema.string(),
 
   ENVIAR_EMAIL: Env.schema.boolean(),
+
+  DEFAULT_PER_PAGE: Env.schema.number(),
+  MIN_PASSWORD_LENGTH: Env.schema.number(),
 });
