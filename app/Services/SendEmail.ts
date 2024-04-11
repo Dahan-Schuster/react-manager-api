@@ -6,7 +6,7 @@ export default class SendMail {
     destinatario: string,
     subject: string,
     body: string,
-    params?: Record<string, any>
+    params: Record<string, any> = {}
   ) {
     try {
       let enviar = Env.get("ENVIAR_EMAIL");
@@ -21,7 +21,11 @@ export default class SendMail {
           .from(Env.get("SMTP_USERNAME"))
           .to(destinatario)
           .subject(subject)
-          .htmlView(body, params);
+          .htmlView(body, {
+            ...params,
+            nomeApp: Env.get("NOME_PROJETO"),
+            nomeCliente: Env.get("NOME_CLIENTE"),
+          });
       });
       return { status: true, mensagem: "Email enviado com sucesso!" };
     } catch (error) {

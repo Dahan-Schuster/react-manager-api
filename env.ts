@@ -37,4 +37,7 @@ export default Env.rules({
 
   DEFAULT_PER_PAGE: Env.schema.number(),
   MIN_PASSWORD_LENGTH: Env.schema.number(),
+
+  NOME_CLIENTE: Env.schema.string(),
+  NOME_PROJETO: Env.schema.string(),
 });
