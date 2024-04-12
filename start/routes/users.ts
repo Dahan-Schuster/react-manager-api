@@ -7,5 +7,5 @@ Route.group(() => {
   Route.put("/:id", "Users/UpdateUsersController");
   Route.delete("/:id", "Users/DeleteUsersController");
 })
-  .prefix("usuarios")
+  .prefix("usuario")
   .middleware("auth");
