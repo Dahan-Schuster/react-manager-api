@@ -6,6 +6,7 @@ import {
   BaseModel,
   HasOne,
   hasOne,
+  scope,
 } from "@ioc:Adonis/Lucid/Orm";
 import ApiError from "App/Exceptions/ApiError";
 
@@ -44,7 +45,7 @@ export default class User extends BaseModel {
   public deletedByUser: HasOne<typeof User>;
 
   @beforeSave()
-  public static async hashPassword(user: User) {
+  public static async beforeSave(user: User) {
     if (user.$dirty.password) {
       user.password = await Hash.make(user.password);
     }
@@ -66,4 +67,8 @@ export default class User extends BaseModel {
       }
     }
   }
+
+  public static ativo = scope((query) => {
+    query.where("status", ">", 0);
+  });
 }

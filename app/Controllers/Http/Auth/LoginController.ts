@@ -15,15 +15,26 @@ export default class LoginController {
 
     try {
       const token = await auth.use("jwt").attempt(email, password);
+
+      const user = auth.user!;
+      if (user.status === 0) {
+        throw new ApiError(
+          "Este usuário encontra-se inativo e não tem permissão para fazer login.",
+          403
+        );
+      }
+
       return response.send({
         success: true,
         token,
-        user: auth.user?.serialize(),
+        user,
       });
     } catch (e) {
       if (e?.constructor?.name === "InvalidCredentialsException") {
-        throw new ApiError("Email ou senha inválidos", 400);
+        throw new ApiError("Email ou senha inválidos", 401);
       }
+
+      throw e;
     }
   }
 }

@@ -9,6 +9,7 @@ export default class GetUsersController {
     const role = request.input("role", "");
     const name = request.input("name", "");
     const email = request.input("email", "");
+    const status = parseInt(request.input("status", null));
 
     const query = User.query();
 
@@ -24,8 +25,13 @@ export default class GetUsersController {
       query.whereILike("email", `%${email}%`);
     }
 
+    if (!isNaN(status)) {
+      query.where("status", status);
+    }
+
     const users = await query.paginate(page, limit);
     response.send({
+      status: status,
       success: true,
       users,
     });
