@@ -7,8 +7,11 @@ import {
   HasOne,
   hasOne,
   scope,
+  ManyToMany,
 } from "@ioc:Adonis/Lucid/Orm";
 import ApiError from "App/Exceptions/ApiError";
+import { manyToMany } from "@ioc:Adonis/Lucid/Orm";
+import Permissao from "./Permissao";
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -46,6 +49,13 @@ export default class User extends BaseModel {
     localKey: "deletedBy",
   })
   public deletedByUser: HasOne<typeof User>;
+
+  @manyToMany(() => Permissao, {
+    pivotTable: "permissoes_usuarios",
+    pivotForeignKey: "user_id",
+    pivotRelatedForeignKey: "permissao_id",
+  })
+  public permissoes: ManyToMany<typeof Permissao>;
 
   @beforeSave()
   public static async beforeSave(user: User) {
