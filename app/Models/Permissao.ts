@@ -21,6 +21,9 @@ export default class Permissao extends BaseModel {
   public label: string;
 
   @column()
+  public slug: string;
+
+  @column()
   public tipoId: number;
 
   @belongsTo(() => TipoPermissao)

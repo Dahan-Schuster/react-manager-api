@@ -1,6 +1,8 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import { schema, rules } from "@ioc:Adonis/Core/Validator";
 import Modulo from "App/Models/Modulo";
+import TipoPermissao from "App/Models/TipoPermissao";
+import StringTools from "App/Services/StringTools";
 
 export default class UpdateTiposPermissoesModuloController {
   public async handle({ response, request }: HttpContextContract) {
@@ -13,7 +15,7 @@ export default class UpdateTiposPermissoesModuloController {
           tipoId: schema.number([
             rules.exists({ table: "tipos_permissoes", column: "id" }),
           ]),
-          label: schema.string({ trim: true }),
+          label: schema.string.optional({ trim: true }),
         })
       ),
     });
@@ -32,11 +34,24 @@ export default class UpdateTiposPermissoesModuloController {
       )
       .delete();
 
+    const tiposFormatados = await Promise.all(
+      tiposPermissoes.map(async (tp) => {
+        const tipo = await TipoPermissao.findOrFail(tp.tipoId);
+        const slug = StringTools.slugify(modulo.nome + "-" + tipo.nome);
+
+        return {
+          ...tp,
+          label: tp.label || tipo.nome + " " + modulo.nome,
+          slug,
+        };
+      })
+    );
+
     // cria os tipos que estiverem na requisição e não estiverem no módulo
     // e edita os que já estiverem no módulo
     await modulo
       .related("tiposPermissoes")
-      .updateOrCreateMany(tiposPermissoes, ["tipoId"]);
+      .updateOrCreateMany(tiposFormatados, ["tipoId"]);
 
     await modulo.load("tiposPermissoes");
 
