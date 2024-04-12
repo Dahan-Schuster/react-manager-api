@@ -6,6 +6,11 @@ Route.group(() => {
   Route.post("/", "Users/StoreUsersController");
   Route.put("/:id", "Users/UpdateUsersController");
   Route.delete("/:id", "Users/DeleteUsersController");
+
+  Route.group(() => {
+    Route.post("", "Users/LinkPermissaoUsuarioController");
+    Route.delete("", "Users/UnlinkPermissaoUsuarioController");
+  }).prefix("/:id/permissoes/:idPermissao");
 })
   .prefix("usuario")
   .middleware("auth");

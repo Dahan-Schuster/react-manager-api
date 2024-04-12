@@ -10,6 +10,8 @@ export default class GetUsersController {
       await user.load("deletedByUser");
     }
 
+    await user.load("permissoes");
+
     return response.send({
       success: true,
       user: user.toJSON(),
