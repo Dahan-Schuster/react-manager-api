@@ -41,7 +41,10 @@ export default class User extends BaseModel {
   @column()
   public deletedBy: number;
 
-  @hasOne(() => User)
+  @hasOne(() => User, {
+    foreignKey: "id",
+    localKey: "deletedBy",
+  })
   public deletedByUser: HasOne<typeof User>;
 
   @beforeSave()
