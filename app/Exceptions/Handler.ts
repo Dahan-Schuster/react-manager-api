@@ -59,6 +59,10 @@ export default class ExceptionHandler extends HttpExceptionHandler {
     .set("ER_DUP_ENTRY", () => [
       409,
       { success: false, error: "Registro duplicado" },
+    ])
+    .set("ER_NO_SUCH_TABLE", () => [
+      404,
+      { success: false, error: "Tabela não encontrada" },
     ]);
 
   private defaultHandler = (error: any) => {
