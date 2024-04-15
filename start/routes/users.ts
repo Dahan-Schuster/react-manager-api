@@ -14,6 +14,10 @@ Route.group(() => {
   Route.delete("/:id", "Users/DeleteUsersController").middleware(
     "auth:usuarios-deletar"
   );
+  Route.put(
+    "/:id/trocar-status",
+    "Users/ChangeStatusUsuarioController"
+  ).middleware("auth:usuarios-alterar-status");
 
   Route.group(() => {
     Route.post("", "Users/LinkPermissaoUsuarioController");

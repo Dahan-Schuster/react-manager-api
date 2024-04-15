@@ -11,7 +11,7 @@ export default class GetUsersController {
     const email = request.input("email", "");
     const status = parseInt(request.input("status", null));
 
-    const query = User.query();
+    const query = User.query().whereNull("deleted_at");
 
     if (role) {
       query.where("role", role);

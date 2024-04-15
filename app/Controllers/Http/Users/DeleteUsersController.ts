@@ -11,8 +11,15 @@ export default class DeleteUsersController {
     const user = await User.findOrFail(id);
 
     await Database.from("jwt_tokens").where("user_id", id).delete();
+    await user.load("permissoes");
+    await user.related("permissoes").detach(user.permissoes.map((p) => p.id));
+
     await user
-      .merge({ status: 0, deletedBy: loggedUser.id, deletedAt: DateTime.now() })
+      .merge({
+        status: 0,
+        deletedBy: loggedUser.id,
+        deletedAt: DateTime.now(),
+      })
       .save();
 
     response.send({
