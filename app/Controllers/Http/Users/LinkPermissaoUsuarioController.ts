@@ -21,7 +21,11 @@ export default class LinkPermissaoUsuarioController {
       });
     }
 
-    await user.related("permissoes").attach([idPermissao]);
+    await user.related("permissoes").attach({
+      [idPermissao]: {
+        permissao_fixada: 1,
+      },
+    });
     await user.load("permissoes");
 
     return response.send({
