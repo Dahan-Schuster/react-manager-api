@@ -31,12 +31,6 @@ export default class extends BaseSeeder {
           label: "Deletar perfil",
           slug: "perfis-deletar",
         },
-        {
-          tipoId: 5,
-          moduloId: 1,
-          label: "Alterar status perfil",
-          slug: "perfis-alterar-status",
-        },
 
         // CRUD usuários
         {
