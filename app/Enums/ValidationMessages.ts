@@ -17,4 +17,5 @@ export const userValidationMessages: CustomMessages = {
   "password.confirmed": "As senhas não coincidem",
   "password_confirmation.confirmed": "As senhas não coincidem",
   "password.minLength": `A senha deve ter pelo menos ${minPasswordLength} caracteres`,
+  exists: "{{ field }} inválido",
 };

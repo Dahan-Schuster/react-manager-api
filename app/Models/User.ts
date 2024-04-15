@@ -4,7 +4,9 @@ import {
   BelongsTo,
   HasOne,
   ManyToMany,
+  afterCreate,
   beforeSave,
+  beforeUpdate,
   belongsTo,
   column,
   hasOne,
@@ -95,7 +97,7 @@ export default class User extends BaseModel {
     }
   }
 
-  @beforeSave()
+  @beforeUpdate()
   public static async atualizarPermissoes(user: User) {
     // se não alterou o perfil, não faz nada
     if (user.$dirty.perfilId === undefined) {
@@ -103,7 +105,9 @@ export default class User extends BaseModel {
     }
 
     // se o usuário possuia um perfil anterior...
-    const perfilOriginal = await Perfil.find(user.$original.perfilId);
+    const perfilOriginal = user.$original.perfilId
+      ? await Perfil.find(user.$original.perfilId)
+      : null;
     if (perfilOriginal) {
       // busca as permissões relacionadas ao antigo perfil do usuário
       const permissoesPerfilOriginal = await perfilOriginal
@@ -133,6 +137,13 @@ export default class User extends BaseModel {
 
     // se apenas removeu o perfil, não precisa adicionar permissões
     if (!user.perfilId) return;
+
+    await User.adicionarPermicoes(user);
+  }
+
+  @afterCreate()
+  public static async adicionarPermicoes(user: User) {
+    if (!user.perfilId || !user.id) return;
 
     const perfil = await Perfil.find(user.perfilId);
     if (!perfil) return;
