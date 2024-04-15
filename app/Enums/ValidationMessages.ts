@@ -3,6 +3,11 @@ import type { CustomMessages } from "@ioc:Adonis/Core/Validator";
 
 const minPasswordLength = Env.get("MIN_PASSWORD_LENGTH");
 
+export const defaultValidationMessages: CustomMessages = {
+  "nome.unique": "Registro com mesmo nome já cadastrado",
+  "email.unique": "Registro com mesmo e-mail já cadastrado",
+};
+
 export const userValidationMessages: CustomMessages = {
   "nome.required": "Nome é obrigatório",
   "email.required": "Email é obrigatório",

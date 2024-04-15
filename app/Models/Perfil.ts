@@ -8,6 +8,8 @@ import {
 import Permissao from "./Permissao";
 
 export default class Perfil extends BaseModel {
+  public static table = "perfis";
+
   @column({ isPrimary: true })
   public id: number;
 

@@ -23,6 +23,7 @@ import Route from "@ioc:Adonis/Core/Route";
 import "./routes/users";
 import "./routes/auth";
 import "./routes/modulos";
+import "./routes/perfis";
 
 Route.get("/", async () => {
   return { hello: "world" };
