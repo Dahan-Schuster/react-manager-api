@@ -1,11 +1,14 @@
 import { DateTime } from "luxon";
 import {
   BaseModel,
+  HasMany,
   ManyToMany,
   column,
   manyToMany,
 } from "@ioc:Adonis/Lucid/Orm";
 import Permissao from "./Permissao";
+import { hasMany } from "@ioc:Adonis/Lucid/Orm";
+import User from "./User";
 
 export default class Perfil extends BaseModel {
   public static table = "perfis";
@@ -29,4 +32,7 @@ export default class Perfil extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime;
+
+  @hasMany(() => User)
+  public users: HasMany<typeof User>;
 }

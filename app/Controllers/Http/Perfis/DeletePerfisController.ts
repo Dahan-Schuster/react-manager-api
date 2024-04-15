@@ -1,21 +1,32 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
+import Database from "@ioc:Adonis/Lucid/Database";
 import Perfil from "App/Models/Perfil";
 
 export default class DeletePerfisController {
   public async handle({ request, response }: HttpContextContract) {
     const id = request.param("id", 0);
-    const perfis = await Perfil.findOrFail(id);
+    const perfil = await Perfil.findOrFail(id);
 
-    await perfis.load("permissoes");
-    await perfis
-      .related("permissoes")
-      .detach(perfis.permissoes.map((p) => p.id));
+    await Database.transaction(async (trx) => {
+      perfil.useTransaction(trx);
+      await perfil.load("permissoes");
+      await perfil
+        .related("permissoes")
+        .detach(perfil.permissoes.map((p) => p.id));
 
-    // TODO: atualizar as permissões dos usuários que o perfil tiver
+      // deleta as permissões de usuário que tinham sido herdadas pelo perfil
+      await Database.query()
+        .useTransaction(trx)
+        .from("permissoes_usuarios")
+        .innerJoin("users", "users.id", "permissoes_usuarios.user_id")
+        .where("users.perfil_id", perfil.id)
+        .andWhere("permissao_fixada", 0)
+        .delete();
 
-    await perfis.delete();
-    response.send({
-      success: true,
+      await perfil.delete();
+      response.send({
+        success: true,
+      });
     });
   }
 }
