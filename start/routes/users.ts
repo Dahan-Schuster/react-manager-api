@@ -18,5 +18,7 @@ Route.group(() => {
   Route.group(() => {
     Route.post("", "Users/LinkPermissaoUsuarioController");
     Route.delete("", "Users/UnlinkPermissaoUsuarioController");
-  }).prefix("/:id/permissoes/:idPermissao");
+  })
+    .prefix("/:id/permissoes/:idPermissao")
+    .middleware("auth:usuarios-alterar-permissao");
 }).prefix("usuario");
