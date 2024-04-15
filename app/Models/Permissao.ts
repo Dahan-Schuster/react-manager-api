@@ -10,6 +10,7 @@ import {
 import TipoPermissao from "./TipoPermissao";
 import Modulo from "./Modulo";
 import User from "./User";
+import Perfil from "./Perfil";
 
 export default class Permissao extends BaseModel {
   public static table = "permissoes";
@@ -39,8 +40,18 @@ export default class Permissao extends BaseModel {
     pivotTable: "permissoes_usuarios",
     pivotForeignKey: "permissao_id",
     pivotRelatedForeignKey: "user_id",
+    pivotColumns: ["permissao_fixada"],
+    pivotTimestamps: true,
   })
   public users: ManyToMany<typeof User>;
+
+  @manyToMany(() => Perfil, {
+    pivotTable: "permissoes_perfis",
+    pivotForeignKey: "permissao_id",
+    pivotRelatedForeignKey: "perfil_id",
+    pivotTimestamps: true,
+  })
+  public perfis: ManyToMany<typeof Perfil>;
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;
