@@ -12,6 +12,7 @@ export const userValidationMessages: CustomMessages = {
   "nome.required": "Nome é obrigatório",
   "email.required": "Email é obrigatório",
   "email.email": "Email inválido",
+  "perfilId.required": "Perfil é obrigatório",
   "password.required": "Senha é obrigatória",
   "password.confirmed": "As senhas não coincidem",
   "password_confirmation.confirmed": "As senhas não coincidem",

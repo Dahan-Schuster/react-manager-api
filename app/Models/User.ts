@@ -54,7 +54,7 @@ export default class User extends BaseModel {
   public deletedByUser: HasOne<typeof User>;
 
   @column()
-  public perfilId: number;
+  public perfilId: number | null;
 
   @belongsTo(() => Perfil)
   public perfil: BelongsTo<typeof Perfil>;
@@ -92,6 +92,75 @@ export default class User extends BaseModel {
           400
         );
       }
+    }
+  }
+
+  @beforeSave()
+  public static async atualizarPermissoes(user: User) {
+    // se não alterou o perfil, não faz nada
+    if (user.$dirty.perfilId === undefined) {
+      return;
+    }
+
+    // se o usuário possuia um perfil anterior...
+    const perfilOriginal = await Perfil.find(user.$original.perfilId);
+    if (perfilOriginal) {
+      // busca as permissões relacionadas ao antigo perfil do usuário
+      const permissoesPerfilOriginal = await perfilOriginal
+        ?.related("permissoes")
+        .query()
+        .select("id");
+      const idsPermissoesPerfilOriginal = permissoesPerfilOriginal?.map(
+        (p) => p.id
+      );
+
+      // filtra as permissões do usuário que foram herdadas pelo perfil (não fixadas)
+      const permissoesPerfilUsuario = await user
+        .related("permissoes")
+        .query()
+        .whereInPivot("permissao_id", idsPermissoesPerfilOriginal)
+        .andWherePivot("permissao_fixada", 0)
+        .select("id");
+      const idsPermissoesPerfilUsuario = permissoesPerfilUsuario?.map(
+        (p) => p.id
+      );
+
+      // remove as permissões herdadas pelo perfil antigo, se houverem
+      if (idsPermissoesPerfilUsuario?.length) {
+        await user.related("permissoes").detach(idsPermissoesPerfilUsuario);
+      }
+    }
+
+    // se apenas removeu o perfil, não precisa adicionar permissões
+    if (!user.perfilId) return;
+
+    const perfil = await Perfil.find(user.perfilId);
+    if (!perfil) return;
+
+    // busca as permissões do novo perfil
+    const permissoesNovoPerfil = await perfil
+      .related("permissoes")
+      .query()
+      .select("id");
+    const idsPermissoesNovoPerfil = permissoesNovoPerfil?.map((p) => p.id);
+
+    // busca as permissões do perfil que já foram fixadas no usuário
+    const permissoesFixadas = await user
+      .related("permissoes")
+      .query()
+      .whereInPivot("permissao_id", idsPermissoesNovoPerfil)
+      .andWherePivot("permissao_fixada", 1)
+      .select("id");
+    const idsPermissoesFixadas = permissoesFixadas?.map((p) => p.id);
+
+    // filtra as permissões que devem ser herdadas (não foram fixadas anteriormente)
+    const idsPermissoesHerdadas = idsPermissoesNovoPerfil.filter(
+      (p) => !idsPermissoesFixadas?.includes(p)
+    );
+
+    // adiciona as permissões herdadas ao usuário, se houverem
+    if (idsPermissoesHerdadas?.length) {
+      await user.related("permissoes").attach(idsPermissoesHerdadas);
     }
   }
 

@@ -19,6 +19,9 @@ Route.group(() => {
     "Users/ChangeStatusUsuarioController"
   ).middleware("auth:usuarios-alterar-status");
 
+  Route.put("/:id/alterar-perfil", "Users/AlterarPerfilUsuarioController");
+  // .middleware("auth:usuarios-alterar-permissao");
+
   Route.group(() => {
     Route.post("", "Users/LinkPermissaoUsuarioController");
     Route.delete("", "Users/UnlinkPermissaoUsuarioController");
