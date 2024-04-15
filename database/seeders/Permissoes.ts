@@ -6,12 +6,75 @@ export default class extends BaseSeeder {
     await Permissao.fetchOrCreateMany(
       ["tipoId", "moduloId"],
       [
+        // CRUD perfis
+        {
+          tipoId: 1,
+          moduloId: 1,
+          label: "Listar perfis",
+          slug: "perfis-listar",
+        },
+        {
+          tipoId: 2,
+          moduloId: 1,
+          label: "Cadastrar perfil",
+          slug: "perfis-criar",
+        },
+        {
+          tipoId: 3,
+          moduloId: 1,
+          label: "Editar perfil",
+          slug: "perfis-editar",
+        },
+        {
+          tipoId: 4,
+          moduloId: 1,
+          label: "Deletar perfil",
+          slug: "perfis-deletar",
+        },
+        {
+          tipoId: 5,
+          moduloId: 1,
+          label: "Alterar status perfil",
+          slug: "perfis-alterar-status",
+        },
+
         // CRUD usuários
-        { tipoId: 1, moduloId: 2, label: "Listar usuário" },
-        { tipoId: 2, moduloId: 2, label: "Cadastrar usuário" },
-        { tipoId: 3, moduloId: 2, label: "Editar usuário" },
-        { tipoId: 4, moduloId: 2, label: "Deletar usuário" },
-        { tipoId: 5, moduloId: 2, label: "Alterar status usuário" },
+        {
+          tipoId: 1,
+          moduloId: 2,
+          label: "Listar usuário",
+          slug: "usuarios-listar",
+        },
+        {
+          tipoId: 2,
+          moduloId: 2,
+          label: "Cadastrar usuário",
+          slug: "usuarios-criar",
+        },
+        {
+          tipoId: 3,
+          moduloId: 2,
+          label: "Editar usuário",
+          slug: "usuarios-editar",
+        },
+        {
+          tipoId: 4,
+          moduloId: 2,
+          label: "Deletar usuário",
+          slug: "usuarios-deletar",
+        },
+        {
+          tipoId: 5,
+          moduloId: 2,
+          label: "Alterar status usuário",
+          slug: "usuarios-alterar-status",
+        },
+        {
+          tipoId: 6,
+          moduloId: 2,
+          label: "Alterar permissões usuário",
+          slug: "usuarios-alterar-permissao",
+        },
       ]
     );
   }

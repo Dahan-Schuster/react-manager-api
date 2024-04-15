@@ -9,6 +9,7 @@ export default class extends BaseSeeder {
       { nome: "Editar" },
       { nome: "Deletar" },
       { nome: "Alterar status" },
+      { nome: "Alterar Permissão" },
     ]);
   }
 }

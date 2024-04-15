@@ -5,8 +5,6 @@ export default class extends BaseSeeder {
   public async run() {
     await Modulo.fetchOrCreateMany("nome", [
       { nome: "Perfis" },
-      { nome: "Módulos" },
-      { nome: "Permissões" },
       { nome: "Usuários" },
     ]);
   }
