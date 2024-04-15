@@ -1,16 +1,19 @@
-import { DateTime } from "luxon";
 import Hash from "@ioc:Adonis/Core/Hash";
 import {
-  column,
-  beforeSave,
   BaseModel,
+  BelongsTo,
   HasOne,
-  hasOne,
-  scope,
   ManyToMany,
+  beforeSave,
+  belongsTo,
+  column,
+  hasOne,
+  manyToMany,
+  scope,
 } from "@ioc:Adonis/Lucid/Orm";
 import ApiError from "App/Exceptions/ApiError";
-import { manyToMany } from "@ioc:Adonis/Lucid/Orm";
+import { DateTime } from "luxon";
+import Perfil from "./Perfil";
 import Permissao from "./Permissao";
 
 export default class User extends BaseModel {
@@ -50,10 +53,21 @@ export default class User extends BaseModel {
   })
   public deletedByUser: HasOne<typeof User>;
 
+  @column()
+  public perfilId: number;
+
+  @belongsTo(() => Perfil)
+  public perfil: BelongsTo<typeof Perfil>;
+
   @manyToMany(() => Permissao, {
     pivotTable: "permissoes_usuarios",
     pivotForeignKey: "user_id",
     pivotRelatedForeignKey: "permissao_id",
+    pivotColumns: ["permissao_fixada"],
+    pivotTimestamps: true,
+    onQuery(query) {
+      query.pivotColumns(["permissao_fixada"]);
+    },
   })
   public permissoes: ManyToMany<typeof Permissao>;
 
