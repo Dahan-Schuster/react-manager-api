@@ -24,6 +24,8 @@ export default class LoginController {
         );
       }
 
+      await user.load("permissoes");
+
       return response.send({
         success: true,
         token,
