@@ -14,6 +14,9 @@ export default class StoreUsersController {
         rules.minLength(minPasswordLength),
         rules.confirmed(),
       ]),
+      perfilId: schema.number.optional([
+        rules.exists({ table: "perfis", column: "id" }),
+      ]),
     });
 
     const data = await request.validate({
