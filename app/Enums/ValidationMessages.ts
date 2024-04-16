@@ -7,6 +7,8 @@ export const defaultValidationMessages: CustomMessages = {
   "nome.unique": "Registro com mesmo nome já cadastrado",
   "email.unique": "Registro com mesmo e-mail já cadastrado",
   exists: "{{ field }} inválido",
+  required: "{{ field }} é obrigatório",
+  regex: "campo {{ field }} não está no formato de texto esperado",
 };
 
 export const userValidationMessages: CustomMessages = {

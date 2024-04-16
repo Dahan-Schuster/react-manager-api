@@ -24,6 +24,7 @@ import "./routes/users";
 import "./routes/auth";
 import "./routes/modulos";
 import "./routes/perfis";
+import "./routes/sistema";
 
 Route.get("/", async () => {
   return { hello: "world" };
