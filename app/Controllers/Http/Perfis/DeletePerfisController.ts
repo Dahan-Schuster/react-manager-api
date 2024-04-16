@@ -9,10 +9,7 @@ export default class DeletePerfisController {
 
     await Database.transaction(async (trx) => {
       perfil.useTransaction(trx);
-      await perfil.load("permissoes");
-      await perfil
-        .related("permissoes")
-        .detach(perfil.permissoes.map((p) => p.id));
+      await perfil.related("permissoes").detach();
 
       // deleta as permissões de usuário que tinham sido herdadas pelo perfil
       await Database.query()
