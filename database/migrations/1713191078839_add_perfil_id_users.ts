@@ -9,7 +9,7 @@ export default class extends BaseSchema {
         .integer("perfil_id")
         .unsigned()
         .references("perfis.id")
-        .onDelete("CASCADE");
+        .onDelete("SET NULL");
     });
   }
 
