@@ -18,4 +18,19 @@ Route.group(() => {
       "auth:temas-deletar"
     );
   }).prefix("paletas");
+
+  Route.group(() => {
+    Route.get("", "ImagensSistema/GetImagensController").middleware(
+      "auth:temas-listar"
+    );
+    Route.post("", "ImagensSistema/StoreImagensController").middleware(
+      "auth:temas-criar"
+    );
+    Route.put("/:id", "ImagensSistema/UpdateImagensController").middleware(
+      "auth:temas-editar"
+    );
+    Route.delete("/:id", "ImagensSistema/DeleteImagensController").middleware(
+      "auth:temas-deletar"
+    );
+  }).prefix("imagens");
 }).prefix("sistema");
