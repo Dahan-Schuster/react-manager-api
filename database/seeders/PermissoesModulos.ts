@@ -69,6 +69,32 @@ export default class extends BaseSeeder {
           label: "Alterar permissões usuário",
           slug: "usuarios-alterar-permissao",
         },
+
+        // CRUD temas
+        {
+          tipoId: 1,
+          moduloId: 3,
+          label: "Listar temas",
+          slug: "temas-listar",
+        },
+        {
+          tipoId: 2,
+          moduloId: 3,
+          label: "Cadastrar tema",
+          slug: "temas-criar",
+        },
+        {
+          tipoId: 3,
+          moduloId: 3,
+          label: "Editar tema",
+          slug: "temas-editar",
+        },
+        {
+          tipoId: 4,
+          moduloId: 3,
+          label: "Deletar tema",
+          slug: "temas-deletar",
+        },
       ]
     );
   }

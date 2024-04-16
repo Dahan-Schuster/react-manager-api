@@ -6,6 +6,7 @@ export default class extends BaseSeeder {
     await Modulo.fetchOrCreateMany("nome", [
       { nome: "Perfis" },
       { nome: "Usuários" },
+      { nome: "Temas" },
     ]);
   }
 }
