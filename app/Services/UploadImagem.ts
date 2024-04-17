@@ -29,6 +29,9 @@ export default class UploadImagem {
   }
 
   public static async delete(filePath: string) {
+    if (filePath.startsWith("public")) {
+      filePath = filePath.replace("public", "");
+    }
     await Drive.delete(filePath);
   }
 }

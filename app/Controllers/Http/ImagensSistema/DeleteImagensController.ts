@@ -11,7 +11,7 @@ export default class DeletePaletasController {
     await Database.transaction(async (trx) => {
       imagem.useTransaction(trx);
 
-      await UploadImagem.delete(imagem.url.replace("public", ""));
+      await UploadImagem.delete(imagem.url);
       await imagem.delete();
 
       response.send({
