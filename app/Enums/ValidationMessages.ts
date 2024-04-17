@@ -6,9 +6,12 @@ const minPasswordLength = Env.get("MIN_PASSWORD_LENGTH");
 export const defaultValidationMessages: CustomMessages = {
   "nome.unique": "Registro com mesmo nome já cadastrado",
   "email.unique": "Registro com mesmo e-mail já cadastrado",
-  exists: "{{ field }} inválido",
+  exists: "{{ field }} não encontrado",
   required: "{{ field }} é obrigatório",
   regex: "campo {{ field }} não está no formato de texto esperado",
+  requiredIfNotExists:
+    "{{ field }} é obrigatório se {{ options.otherField }} não estiver preenchido",
+  enum: "Valores disponíveis para o campo {{ field }}: {{ options.choices }}",
 };
 
 export const userValidationMessages: CustomMessages = {
