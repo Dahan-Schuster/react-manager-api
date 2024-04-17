@@ -58,7 +58,7 @@ export default class StoreTemasController {
 
         // se ativar o tema, inativa os demais
         if (ativo) {
-          await TemaMuiSistema.inativarOutrosTemas(tema.id);
+          await TemaMuiSistema.inativarOutrosTemas(tema);
         }
 
         // relaciona os ids das paletas de cores ao tema,
