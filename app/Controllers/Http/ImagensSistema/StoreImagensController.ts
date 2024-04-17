@@ -1,7 +1,6 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import { schema } from "@ioc:Adonis/Core/Validator";
 import ImagemSistema from "App/Models/ImagemSistema";
-import UploadImagem from "App/Services/UploadImagem";
 
 export default class StoreImagensController {
   public async handle({ request, response }: HttpContextContract) {
@@ -14,13 +13,7 @@ export default class StoreImagensController {
       schema: validationSchema,
     });
 
-    const url = await UploadImagem.upload(
-      file,
-      { name: nomeImagem },
-      "imagens"
-    );
-
-    const imagem = await ImagemSistema.create({ url });
+    const imagem = await ImagemSistema.uploadAndCreate(file, nomeImagem);
     response.send({
       success: true,
       imagem: imagem.toJSON(),
