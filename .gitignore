@@ -2,6 +2,8 @@
 **/Session.vim
 **/.undodir
 
+public/
+
 node_modules
 build
 coverage
