@@ -8,6 +8,7 @@ import randomstring from "randomstring";
 import RecoveryToken from "App/Models/RecoveryToken";
 import User from "App/Models/User";
 import SendMail from "App/Services/SendEmail";
+import ApiError from "App/Exceptions/ApiError";
 
 export default class SendPasswordRecoveryEmailController {
   public async handle({ response, request }: HttpContextContract) {
@@ -31,16 +32,26 @@ export default class SendPasswordRecoveryEmailController {
 
     const url = `${request.header("Origin")}/alterar-senha/${tokenString}`;
 
-    await SendMail.send(
+    const statusEmail = await SendMail.send(
       email,
       `Recuperação de senha - ${Env.get("NOME_CLIENTE")}`,
       "emails/password_recovery",
       {
         name: user.nome,
         url,
-      }
+      },
+      false
     );
 
-    response.send({ success: true, token: recoveryToken.toJSON() });
+    if (!statusEmail.status) {
+      await recoveryToken.delete();
+      throw new ApiError(statusEmail.mensagem, 500);
+    }
+
+    response.send({
+      success: true,
+      mensagem: statusEmail.mensagem,
+      token: recoveryToken.toJSON(),
+    });
   }
 }
