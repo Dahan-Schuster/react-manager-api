@@ -6,6 +6,7 @@ import {
 } from "@ioc:Adonis/Lucid/Orm";
 import { DateTime } from "luxon";
 import PaletaCoresSistema from "./PaletaCoresSistema";
+import CoresMui from "App/Enums/CoresMui";
 
 export default class TemaMuiSistema extends BaseModel {
   public static table = "temas_mui_sistema";
@@ -57,5 +58,17 @@ export default class TemaMuiSistema extends BaseModel {
       .andWhere("muiMode", tema.muiMode)
       .update({ ativo: 0 });
   }
+
+  public static formatarPaletas(tema: TemaMuiSistema) {
+    if (!tema.paletasCores) {
+      return tema.toJSON();
+    }
+    return {
+      ...tema.toJSON(),
+      paletasCores: tema.paletasCores.reduce((acc, paleta) => {
+        acc[paleta.$extras.pivot_nome_prop_mui] = paleta.toJSON();
+        return acc;
+      }, {} as Record<CoresMui, TemaMuiSistema>),
+    };
   }
 }

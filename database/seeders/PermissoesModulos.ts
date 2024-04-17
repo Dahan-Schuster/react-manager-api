@@ -95,6 +95,12 @@ export default class extends BaseSeeder {
           label: "Deletar tema",
           slug: "temas-deletar",
         },
+        {
+          tipoId: 5,
+          moduloId: 3,
+          label: "Alterar status tema",
+          slug: "temas-alterar-status",
+        },
       ]
     );
   }
