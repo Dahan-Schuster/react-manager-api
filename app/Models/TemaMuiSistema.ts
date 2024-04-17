@@ -1,13 +1,10 @@
 import {
   BaseModel,
-  HasOne,
   ManyToMany,
   column,
-  hasOne,
   manyToMany,
 } from "@ioc:Adonis/Lucid/Orm";
 import { DateTime } from "luxon";
-import ImagemSistema from "./ImagemSistema";
 import PaletaCoresSistema from "./PaletaCoresSistema";
 
 export default class TemaMuiSistema extends BaseModel {
@@ -23,28 +20,19 @@ export default class TemaMuiSistema extends BaseModel {
   public ativo: 0 | 1;
 
   @column()
-  public muiMode: "light" | "dark";
+  public muiMode: MUI.MuiMode;
 
   @column()
   public urlFavicon: string;
 
   @column()
-  public idLogoHeader: number;
-
-  @hasOne(() => ImagemSistema)
-  public logoHeader: HasOne<typeof ImagemSistema>;
+  public urlLogoHeader: string;
 
   @column()
-  public idLogoLogin: number | null;
-
-  @hasOne(() => ImagemSistema)
-  public logoLogin: HasOne<typeof ImagemSistema>;
+  public urlLogoLogin: string;
 
   @column()
-  public idLogoSimples: number | null;
-
-  @hasOne(() => ImagemSistema)
-  public logoSimples: HasOne<typeof ImagemSistema>;
+  public urlLogoSimples: string;
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;

@@ -12,26 +12,9 @@ export default class extends BaseSchema {
       table.enum("mui_mode", ["light", "dark"]).notNullable();
 
       table.string("url_favicon").notNullable();
-      table
-        .integer("id_logo_header")
-        .unsigned()
-        .references("imagens_sistema.id")
-        .onDelete("RESTRICT")
-        .notNullable();
-
-      table
-        .integer("id_logo_login")
-        .unsigned()
-        .references("imagens_sistema.id")
-        .onDelete("SET NULL")
-        .nullable();
-
-      table
-        .integer("id_logo_simples")
-        .unsigned()
-        .references("imagens_sistema.id")
-        .onDelete("SET NULL")
-        .nullable();
+      table.string("url_logo_header").notNullable();
+      table.string("url_logo_login").notNullable();
+      table.string("url_logo_simples").notNullable();
 
       table.timestamp("created_at", { useTz: true });
       table.timestamp("updated_at", { useTz: true });
