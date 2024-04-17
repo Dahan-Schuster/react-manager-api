@@ -30,19 +30,4 @@ export default class ImagemSistema extends BaseModel {
     const imagem = await ImagemSistema.create({ url });
     return imagem;
   }
-
-  public static async findOrUploadAndCreate(
-    id?: number,
-    file?: MultipartFileContract,
-    nome?: string
-  ) {
-    let imagem: ImagemSistema;
-    if (id) {
-      imagem = await ImagemSistema.findOrFail(id);
-    } else {
-      imagem = await ImagemSistema.uploadAndCreate(file!, nome);
-    }
-
-    return imagem;
-  }
 }

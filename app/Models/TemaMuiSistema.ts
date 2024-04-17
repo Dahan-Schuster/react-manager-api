@@ -50,4 +50,8 @@ export default class TemaMuiSistema extends BaseModel {
     },
   })
   public paletasCores: ManyToMany<typeof PaletaCoresSistema>;
+
+  public static async inativarOutrosTemas(id: number) {
+    await TemaMuiSistema.query().where("id", "!=", id).update({ ativo: 0 });
+  }
 }

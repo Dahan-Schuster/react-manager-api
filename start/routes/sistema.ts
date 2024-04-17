@@ -33,4 +33,10 @@ Route.group(() => {
       "auth:temas-deletar"
     );
   }).prefix("imagens");
+
+  Route.group(() => {
+    Route.post("", "Temas/Mui/StoreTemasController").middleware(
+      "auth:temas-criar"
+    );
+  }).prefix("temas-mui");
 }).prefix("sistema");
