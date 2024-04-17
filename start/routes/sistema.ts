@@ -38,5 +38,8 @@ Route.group(() => {
     Route.post("", "Temas/Mui/StoreTemasController").middleware(
       "auth:temas-criar"
     );
+    Route.put("", "Temas/Mui/UpdateTemasController").middleware(
+      "auth:temas-editar"
+    );
   }).prefix("temas-mui");
 }).prefix("sistema");
