@@ -46,7 +46,7 @@ export default class PaletaCoresSistema extends BaseModel {
   @column()
   public "700": string | null;
 
-  @column()
+  @column({ columnName: "contrastText" })
   public contrastText: string | null;
 
   @column.dateTime({ autoCreate: true })
