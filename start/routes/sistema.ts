@@ -35,6 +35,16 @@ Route.group(() => {
   }).prefix("imagens");
 
   Route.group(() => {
+    Route.get(
+      "ativo-light",
+      "Temas/Mui/GetTemaAtivoController.light"
+    ).middleware("auth");
+    Route.get("ativo-dark", "Temas/Mui/GetTemaAtivoController.dark").middleware(
+      "auth"
+    );
+    Route.get("", "Temas/Mui/GetTemasController").middleware(
+      "auth:temas-listar"
+    );
     Route.post("", "Temas/Mui/StoreTemasController").middleware(
       "auth:temas-criar"
     );

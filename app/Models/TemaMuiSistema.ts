@@ -7,6 +7,7 @@ import {
 import { DateTime } from "luxon";
 import PaletaCoresSistema from "./PaletaCoresSistema";
 import CoresMui from "App/Enums/CoresMui";
+import { ModelObject } from "@ioc:Adonis/Lucid/Orm";
 
 export default class TemaMuiSistema extends BaseModel {
   public static table = "temas_mui_sistema";
@@ -59,13 +60,22 @@ export default class TemaMuiSistema extends BaseModel {
       .update({ ativo: 0 });
   }
 
-  public static formatarPaletas(tema: TemaMuiSistema) {
-    if (!tema.paletasCores) {
-      return tema.toJSON();
-    }
+  public static async getAtivo(mode: MUI.MuiMode) {
+    const tema = await TemaMuiSistema.query()
+      .preload("paletasCores")
+      .where("ativo", true)
+      .andWhere("mui_mode", mode)
+      .first();
+    if (!tema) return null;
+    return TemaMuiSistema.formatarPaletas(tema);
+  }
+
+  public static formatarPaletas(
+    tema: TemaMuiSistema
+  ): ModelObject & { coresMui?: Record<CoresMui, TemaMuiSistema> } {
     return {
       ...tema.toJSON(),
-      paletasCores: tema.paletasCores.reduce((acc, paleta) => {
+      coresMui: tema.paletasCores?.reduce((acc, paleta) => {
         acc[paleta.$extras.pivot_nome_prop_mui] = paleta.toJSON();
         return acc;
       }, {} as Record<CoresMui, TemaMuiSistema>),
