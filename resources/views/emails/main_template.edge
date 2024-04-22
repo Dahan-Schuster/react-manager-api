@@ -12,6 +12,9 @@
         >
           <tr>
             <td style="background-color: {{ tema.primary?.main }};text-align:center;padding:10px;">
+              @if(urlLogo)
+                <img src="{{ urlLogo }}" alt="logo" />
+              @end
               <h1 style="color:{{ tema.primary?.contrast_text || '#000' }};font-weight:normal;font-size:22px;">
                 {{ tituloEmail }}
               </h1>

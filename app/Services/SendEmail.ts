@@ -27,9 +27,12 @@ export default class SendMail {
           .subject(subject)
           .htmlView(body, {
             ...params,
-            nomeApp: Env.get("NOME_PROJETO"),
-            nomeCliente: Env.get("NOME_CLIENTE"),
-            tema: temaAtivo?.coresMui || {},
+            propsPadrao: {
+              nomeApp: Env.get("NOME_PROJETO"),
+              nomeCliente: Env.get("NOME_CLIENTE"),
+              tema: temaAtivo?.coresMui || {},
+              urlLogo: temaAtivo?.url_logo_header || "",
+            },
           });
       };
       if (sendLater) {
