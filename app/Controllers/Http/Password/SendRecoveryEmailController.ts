@@ -18,7 +18,10 @@ export default class SendPasswordRecoveryEmailController {
 
     const { email } = await request.validate({ schema: validationSchema });
 
-    const user = await User.findByOrFail("email", email);
+    const user = await User.findBy("email", email);
+    if (!user) {
+      throw new ApiError("Usuário não encontrado", 400);
+    }
 
     // deleta tokens previamente criados
     await RecoveryToken.query().where("email", email).delete();
