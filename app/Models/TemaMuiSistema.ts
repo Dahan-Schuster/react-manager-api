@@ -36,6 +36,21 @@ export default class TemaMuiSistema extends BaseModel {
   @column()
   public urlLogoSimples: string;
 
+  @column({ serialize: (value) => value || undefined })
+  public backgroundDefault: string;
+
+  @column({ serialize: (value) => value || undefined })
+  public backgroundPaper: string;
+
+  @column({ serialize: (value) => value || undefined })
+  public textPrimary: string;
+
+  @column({ serialize: (value) => value || undefined })
+  public textSecondary: string;
+
+  @column({ serialize: (value) => value || undefined })
+  public textDisabled: string;
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;
 
@@ -67,7 +82,7 @@ export default class TemaMuiSistema extends BaseModel {
       .andWhere("mui_mode", mode)
       .first();
     if (!tema) return null;
-    return TemaMuiSistema.formatarPaletas(tema);
+    return { ...TemaMuiSistema.formatarPaletas(tema), paletasCores: undefined };
   }
 
   public static formatarPaletas(
@@ -76,7 +91,11 @@ export default class TemaMuiSistema extends BaseModel {
     return {
       ...tema.toJSON(),
       coresMui: tema.paletasCores?.reduce((acc, paleta) => {
-        acc[paleta.$extras.pivot_nome_prop_mui] = paleta.toJSON();
+        acc[paleta.$extras.pivot_nome_prop_mui] = paleta.serialize({
+          fields: {
+            omit: ["created_at", "updated_at", "nome", "id"],
+          },
+        });
         return acc;
       }, {} as Record<CoresMui, TemaMuiSistema>),
     };

@@ -7,7 +7,7 @@ import {
 } from "@ioc:Adonis/Core/Validator";
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import CoresMui from "App/Enums/CoresMui";
-import { opcoesImagemTema } from "App/Enums/Rules";
+import { opcoesImagemTema, regexHexColor } from "App/Enums/Rules";
 import { defaultValidationMessages } from "App/Enums/ValidationMessages";
 
 export default class SaveTemaMuiValidator {
@@ -28,6 +28,12 @@ export default class SaveTemaMuiValidator {
     fileLogoHeader: schema.file.optional(opcoesImagemTema, this.requiredRules),
     fileLogoLogin: schema.file.optional(opcoesImagemTema),
     fileLogoSimples: schema.file.optional(opcoesImagemTema),
+
+    backgroundDefault: schema.string.optional({ trim: true }, [regexHexColor]),
+    backgroundPaper: schema.string.optional({ trim: true }, [regexHexColor]),
+    textPrimary: schema.string.optional({ trim: true }, [regexHexColor]),
+    textSecondary: schema.string.optional({ trim: true }, [regexHexColor]),
+    textDisabled: schema.string.optional({ trim: true }, [regexHexColor]),
 
     // adiciona as cores do MUI ao schema, definido cada uma como um ID da tabela paletas_cores_sistema
     ...Object.keys(CoresMui).reduce((acc, key) => {

@@ -19,34 +19,37 @@ export default class PaletaCoresSistema extends BaseModel {
   @column()
   public main: string;
 
-  @column()
+  @column({ serialize: (value) => value || undefined })
   public dark: string | null;
 
-  @column()
+  @column({ serialize: (value) => value || undefined })
   public light: string | null;
 
-  @column()
+  @column({ serialize: (value) => value || undefined })
   public "100": string | null;
 
-  @column()
+  @column({ serialize: (value) => value || undefined })
   public "200": string | null;
 
-  @column()
+  @column({ serialize: (value) => value || undefined })
   public "300": string | null;
 
-  @column()
+  @column({ serialize: (value) => value || undefined })
   public "400": string | null;
 
-  @column()
+  @column({ serialize: (value) => value || undefined })
   public "500": string | null;
 
-  @column()
+  @column({ serialize: (value) => value || undefined })
   public "600": string | null;
 
-  @column()
+  @column({ serialize: (value) => value || undefined })
   public "700": string | null;
 
-  @column({ columnName: "contrastText" })
+  @column({
+    columnName: "contrastText",
+    serialize: (value) => value || undefined,
+  })
   public contrastText: string | null;
 
   @column.dateTime({ autoCreate: true })

@@ -19,6 +19,11 @@ export default class UpdateTemasController {
       fileLogoHeader,
       fileLogoLogin,
       fileLogoSimples,
+      backgroundDefault,
+      backgroundPaper,
+      textPrimary,
+      textSecondary,
+      textDisabled,
       ...idsPaletasCores
     } = await request.validate(SaveTemaMuiValidator);
 
@@ -26,7 +31,15 @@ export default class UpdateTemasController {
       const tema = await TemaMuiSistema.findOrFail(id);
       tema.useTransaction(trx);
 
-      tema.merge({ nome, muiMode: muiMode as MUI.MuiMode });
+      tema.merge({
+        nome,
+        muiMode: muiMode as MUI.MuiMode,
+        backgroundDefault,
+        backgroundPaper,
+        textPrimary,
+        textSecondary,
+        textDisabled,
+      });
 
       if (fileFavicon) {
         await UploadImagem.delete(tema.urlFavicon);

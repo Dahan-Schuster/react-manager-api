@@ -14,6 +14,11 @@ export default class StoreTemasController {
       fileLogoHeader,
       fileLogoLogin,
       fileLogoSimples,
+      backgroundDefault,
+      backgroundPaper,
+      textPrimary,
+      textSecondary,
+      textDisabled,
       ...idsPaletasCores
     } = await request.validate(SaveTemaMuiValidator);
 
@@ -52,6 +57,11 @@ export default class StoreTemasController {
           urlFavicon,
           urlLogoLogin,
           urlLogoSimples,
+          backgroundDefault,
+          backgroundPaper,
+          textPrimary,
+          textSecondary,
+          textDisabled,
         });
 
         await tema.save();
