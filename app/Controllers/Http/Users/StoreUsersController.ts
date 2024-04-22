@@ -1,8 +1,15 @@
-import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import Env from "@ioc:Adonis/Core/Env";
-import { schema, rules } from "@ioc:Adonis/Core/Validator";
-import User from "App/Models/User";
+import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
+import { rules, schema } from "@ioc:Adonis/Core/Validator";
+import Database from "@ioc:Adonis/Lucid/Database";
 import { userValidationMessages } from "App/Enums/ValidationMessages";
+import ApiError from "App/Exceptions/ApiError";
+import RecoveryToken from "App/Models/RecoveryToken";
+import User from "App/Models/User";
+import SendMail from "App/Services/SendEmail";
+import { DateTime } from "luxon";
+import randomstring from "randomstring";
+
 const minPasswordLength = Env.get("MIN_PASSWORD_LENGTH");
 
 export default class StoreUsersController {
@@ -10,7 +17,7 @@ export default class StoreUsersController {
     const newUserSchema = schema.create({
       nome: schema.string(),
       email: schema.string([rules.email()]),
-      password: schema.string([
+      password: schema.string.optional([
         rules.minLength(minPasswordLength),
         rules.confirmed(),
       ]),
@@ -24,10 +31,48 @@ export default class StoreUsersController {
       messages: userValidationMessages,
     });
 
-    const user = await User.create(data);
-    response.send({
-      success: true,
-      user: user.toJSON(),
+    await Database.transaction(async (trx) => {
+      const user = new User();
+      user.useTransaction(trx);
+
+      // cria o usuário
+      await user.fill(data).save();
+
+      if (!data.password) {
+        // configura um novo token para definir a senha do usuário
+        const tokenString = randomstring.generate();
+        await RecoveryToken.create({
+          email: user.email,
+          token: tokenString,
+          expiresAt: DateTime.now().plus({ days: 1 }),
+        });
+
+        const url = `${request.header("Origin")}/alterar-senha/${tokenString}`;
+
+        const statusEmail = await SendMail.send(
+          user.email,
+          `Criar nova senha - ${Env.get("NOME_CLIENTE")}`,
+          "emails/create_new_password",
+          {
+            name: user.nome,
+            url,
+          },
+          false
+        );
+
+        if (!statusEmail.status) {
+          await trx.rollback();
+          throw new ApiError(
+            "Usuário não criado! " + statusEmail.mensagem,
+            500
+          );
+        }
+      }
+
+      response.send({
+        success: true,
+        user: user.toJSON(),
+      });
     });
   }
 }
