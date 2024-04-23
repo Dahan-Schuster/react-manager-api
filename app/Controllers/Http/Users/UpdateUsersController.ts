@@ -18,6 +18,7 @@ export default class UpdateUsersController {
     const id = request.param("id", 0);
     const user = await User.findOrFail(id);
     await user.merge({ nome, email }).save();
+    await user.load("perfil");
 
     response.send({
       success: true,

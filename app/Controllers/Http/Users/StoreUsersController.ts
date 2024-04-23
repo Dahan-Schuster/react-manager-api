@@ -21,7 +21,7 @@ export default class StoreUsersController {
         rules.minLength(minPasswordLength),
         rules.confirmed(),
       ]),
-      perfilId: schema.number.optional([
+      perfil_id: schema.number.optional([
         rules.exists({ table: "perfis", column: "id" }),
       ]),
     });
@@ -67,6 +67,10 @@ export default class StoreUsersController {
             500
           );
         }
+      }
+
+      if (user.perfilId) {
+        await user.load("perfil");
       }
 
       response.send({
