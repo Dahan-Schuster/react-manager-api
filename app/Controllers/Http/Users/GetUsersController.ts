@@ -7,18 +7,21 @@ export default class GetUsersController {
     const page = request.input("page", 1);
     const limit = request.input("per_page", Env.get("DEFAULT_PER_PAGE"));
     const role = request.input("role", "");
-    const name = request.input("name", "");
+    const nome = request.input("nome", "");
     const email = request.input("email", "");
     const status = parseInt(request.input("status", null));
+    const perfilId = parseInt(request.input("perfilId", null));
 
-    const query = User.query().whereNull("deleted_at");
+    const query = User.query()
+      .whereNull("deleted_at")
+      .orderBy("status", "desc");
 
     if (role) {
       query.where("role", role);
     }
 
-    if (name) {
-      query.whereILike("name", `%${name}%`);
+    if (nome) {
+      query.whereILike("name", `%${nome}%`);
     }
 
     if (email) {
@@ -29,7 +32,15 @@ export default class GetUsersController {
       query.where("status", status);
     }
 
+    if (!isNaN(perfilId) && perfilId > 0) {
+      query.where("perfilId", perfilId);
+    }
+
     const users = await query.paginate(page, limit);
+    await Promise.all(
+      users.filter((u) => !!u.perfilId).map((u) => u.load("perfil"))
+    );
+
     response.send({
       status: status,
       success: true,
