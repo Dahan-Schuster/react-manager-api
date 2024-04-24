@@ -2,6 +2,9 @@ import Route from "@ioc:Adonis/Core/Route";
 
 Route.group(() => {
   Route.get("/", "Perfis/GetPerfisController").middleware("auth:perfis-listar");
+  Route.get("/permissoes", "Perfis/GetPerfisPermissoesController").middleware(
+    "auth:perfis-listar"
+  );
 
   Route.post("/", "Perfis/StorePerfisController").middleware(
     "auth:perfis-criar"
