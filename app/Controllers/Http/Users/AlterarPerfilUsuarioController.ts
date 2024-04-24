@@ -20,6 +20,7 @@ export default class AlterarPerfilUsuarioController {
     const user = await User.findOrFail(id);
 
     await user.merge({ perfilId: perfilId ? perfilId : null }).save();
+    await user.load("perfil");
 
     response.send({
       success: true,

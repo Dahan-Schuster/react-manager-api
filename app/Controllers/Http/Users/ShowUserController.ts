@@ -10,6 +10,10 @@ export default class GetUsersController {
       await user.load("deletedByUser");
     }
 
+    if (user.perfilId) {
+      await user.load("perfil");
+    }
+
     await user.load("permissoes");
 
     return response.send({
