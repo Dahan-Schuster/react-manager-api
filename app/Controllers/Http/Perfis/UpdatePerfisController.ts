@@ -44,7 +44,7 @@ export default class UpdatePerfisController {
       );
 
       // sincroniza as novas permissões no perfil
-      await perfil.related("permissoes").attach(novasPermissoes);
+      await perfil.related("permissoes").attach(permissoesAdicionar);
       if (permissoesDeletar.length) {
         await perfil.related("permissoes").detach(permissoesDeletar);
       }
