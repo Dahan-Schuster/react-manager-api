@@ -101,6 +101,32 @@ export default class extends BaseSeeder {
           label: "Alterar status tema",
           slug: "temas-alterar-status",
         },
+
+        // CRUD itens menu
+        {
+          tipoId: 1,
+          moduloId: 4,
+          label: "Listar itens do menu (tabela de administração)",
+          slug: "itens-menu-listar",
+        },
+        {
+          tipoId: 2,
+          moduloId: 4,
+          label: "Cadastrar item do menu",
+          slug: "itens-menu-criar",
+        },
+        {
+          tipoId: 3,
+          moduloId: 4,
+          label: "Editar item do menu",
+          slug: "itens-menu-editar",
+        },
+        {
+          tipoId: 4,
+          moduloId: 4,
+          label: "Deletar item do menu",
+          slug: "itens-menu-deletar",
+        },
       ]
     );
   }

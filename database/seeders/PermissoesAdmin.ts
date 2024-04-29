@@ -13,7 +13,7 @@ export default class extends BaseSeeder {
 
     const permissoes = await Permissao.query()
       .select("id")
-      .whereIn("modulo_id", [1, 2, 3]);
+      .whereIn("modulo_id", [1, 2, 3, 4]);
 
     await user.load("permissoes");
     const idsPermissoesUser = user.permissoes.map((p) => p.id);
