@@ -55,4 +55,22 @@ Route.group(() => {
       "Temas/Mui/ChangeStatusTemaController"
     ).middleware("auth:temas-alterar-status");
   }).prefix("temas-mui");
+
+  Route.group(() => {
+    Route.get("", "ItensMenu/GetItensMenuController").middleware(
+      "auth:itens-menu-listar"
+    );
+    Route.get(":id", "ItensMenu/ShowItensMenuController").middleware(
+      "auth:itens-menu-listar"
+    );
+    Route.post("", "ItensMenu/StoreItensMenuController").middleware(
+      "auth:itens-menu-criar"
+    );
+    Route.put(":id", "ItensMenu/UpdateItensMenuController").middleware(
+      "auth:itens-menu-editar"
+    );
+    Route.delete(":id", "ItensMenu/DeleteItensMenuController").middleware(
+      "auth:itens-menu-deletar"
+    );
+  }).prefix("itens-menu");
 }).prefix("sistema");
