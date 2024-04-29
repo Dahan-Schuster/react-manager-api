@@ -12,7 +12,7 @@ export default class UpdateItensMenuController {
       target: schema.enum.optional(["_self", "_blank", "_parent", "_top"]),
       icone: schema.string.optional(),
       parent_id: schema.number.optional([
-        rules.exists({ table: "menu_items", column: "id" }),
+        rules.exists({ table: "menu_itens", column: "id" }),
       ]),
       permissoes: schema.array
         .optional()

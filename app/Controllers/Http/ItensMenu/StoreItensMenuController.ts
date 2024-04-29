@@ -12,7 +12,7 @@ export default class StoreItensMenuController {
       target: schema.enum.optional(["_self", "_blank", "_parent", "_top"]),
       icone: schema.string.optional(),
       parent_id: schema.number.optional([
-        rules.exists({ table: "menu_items", column: "id" }),
+        rules.exists({ table: "menu_itens", column: "id" }),
       ]),
       permissoes: schema
         .array()
@@ -29,6 +29,7 @@ export default class StoreItensMenuController {
     await Database.transaction(async (trx) => {
       const item = new MenuItem();
       item.useTransaction(trx);
+      if (!data.target) data.target = "_self";
       await item.fill(data).save();
       await item.related("permissoes").sync(permissoes);
 
