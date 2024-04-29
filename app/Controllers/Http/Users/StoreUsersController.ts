@@ -36,7 +36,7 @@ export default class StoreUsersController {
       user.useTransaction(trx);
 
       // cria o usuário
-      await user.fill(data).save();
+      await user.fill({ ...data, status: 1 }).save();
 
       if (!data.password) {
         // configura um novo token para definir a senha do usuário
