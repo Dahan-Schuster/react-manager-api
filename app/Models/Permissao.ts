@@ -11,6 +11,7 @@ import TipoPermissao from "./TipoPermissao";
 import Modulo from "./Modulo";
 import User from "./User";
 import Perfil from "./Perfil";
+import MenuItem from "./MenuItem";
 
 export default class Permissao extends BaseModel {
   public static table = "permissoes";
@@ -52,6 +53,14 @@ export default class Permissao extends BaseModel {
     pivotTimestamps: true,
   })
   public perfis: ManyToMany<typeof Perfil>;
+
+  @manyToMany(() => MenuItem, {
+    pivotTable: "permissoes_menu_itens",
+    pivotForeignKey: "permissao_id",
+    pivotRelatedForeignKey: "menu_item_id",
+    pivotTimestamps: true,
+  })
+  public menuItens: ManyToMany<typeof MenuItem>;
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;
