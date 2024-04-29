@@ -1,6 +1,7 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import { schema } from "@ioc:Adonis/Core/Validator";
 import ApiError from "App/Exceptions/ApiError";
+import MenuItem from "App/Models/MenuItem";
 
 export default class LoginController {
   public async handle({ auth, response, request }: HttpContextContract) {
@@ -24,12 +25,47 @@ export default class LoginController {
         );
       }
 
-      await user.load("permissoes");
+      await user.load("permissoes", (query) => {
+        query.preload("menuItens", (query) => {
+          query.where("ativo", true).preload("children");
+        });
+      });
+
+      // agrupa os itens de menu de cada permissão em um único array
+      const itensMenuFlat = user.permissoes.map((p) => p.menuItens).flat();
+
+      // formata a lista de menus, removendo os subitens que o usuário não tem permissão para acessar
+      const itensMenu = itensMenuFlat
+        // filtra os itens que são subitens, pois estes serão inclusos no array children de cada item caso haja permissão
+        .filter((i) => !i.parent_id)
+        .map(
+          (i) =>
+            ({
+              ...i.serialize(),
+              children: i.children.filter((child) =>
+                // a lista itensMenuFlat tem os itens de menu de cada permissão, incluindo os subitens
+                // se um subitem não estiver incluso nessa lista, significa que o usuário não tem permissão para acessar
+                itensMenuFlat.find((item) => item.id === child.id)
+              ),
+            } as { id: number; label: string; children: MenuItem[] })
+        )
+        // remove itens duplicados
+        .filter(
+          (value, index, self) =>
+            index === self.findIndex((item) => item.id === value.id)
+        );
 
       return response.send({
         success: true,
         token,
-        user,
+        user: {
+          ...user.serialize(),
+          permissoes: user.permissoes.map((p) => ({
+            ...p.serialize(),
+            menuItens: undefined,
+          })),
+          itensMenu,
+        },
       });
     } catch (e) {
       if (e?.constructor?.name === "InvalidCredentialsException") {
