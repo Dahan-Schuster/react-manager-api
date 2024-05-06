@@ -37,6 +37,8 @@ export default class UpdateTemasController {
       const tema = await TemaMuiSistema.findOrFail(id);
       tema.useTransaction(trx);
 
+      let nomeTema = nome || tema.nome;
+
       tema.merge({
         nome,
         muiMode: muiMode as MUI.MuiMode,
@@ -55,21 +57,21 @@ export default class UpdateTemasController {
       if (fileFavicon) {
         await UploadImagem.delete(tema.urlFavicon);
         tema.urlFavicon = await UploadImagem.upload(fileFavicon, {
-          name: `favicon-tema-${tema.nome}`,
+          name: `favicon-tema-${nomeTema}`,
         });
       }
 
       if (fileLogoHeader) {
         await UploadImagem.delete(tema.urlLogoHeader);
         tema.urlLogoHeader = await UploadImagem.upload(fileLogoHeader, {
-          name: `logoHeader-tema-${tema.nome}`,
+          name: `logoHeader-tema-${nomeTema}`,
         });
       }
 
       if (fileLogoLogin) {
         await UploadImagem.delete(tema.urlLogoLogin);
         tema.urlLogoLogin = await UploadImagem.upload(fileLogoLogin, {
-          name: `logoLogin-tema-${tema.nome}`,
+          name: `logoLogin-tema-${nomeTema}`,
         });
       } else {
         tema.urlLogoLogin = tema.urlLogoHeader;
@@ -78,7 +80,7 @@ export default class UpdateTemasController {
       if (fileLogoSimples) {
         await UploadImagem.delete(tema.urlLogoSimples);
         tema.urlLogoSimples = await UploadImagem.upload(fileLogoSimples, {
-          name: `logoSimples-tema-${tema.nome}`,
+          name: `logoSimples-tema-${nomeTema}`,
         });
       } else {
         tema.urlLogoSimples = tema.urlLogoHeader;
