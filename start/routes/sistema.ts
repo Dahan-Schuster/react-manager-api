@@ -23,6 +23,9 @@ Route.group(() => {
     Route.get("", "Temas/Mui/GetTemasController").middleware(
       "auth:temas-listar"
     );
+    Route.get(":id", "Temas/Mui/ShowTemaController").middleware(
+      "auth:temas-listar"
+    );
     Route.post("", "Temas/Mui/StoreTemasController").middleware(
       "auth:temas-criar"
     );
