@@ -51,6 +51,18 @@ export default class TemaMuiSistema extends BaseModel {
   @column({ serialize: (value) => value || undefined })
   public textDisabled: string;
 
+  @column({ serialize: (value) => value || undefined })
+  public corHeader: string;
+
+  @column({ serialize: (value) => value || undefined })
+  public corTextoHeader: string;
+
+  @column({ serialize: (value) => value || undefined })
+  public corMenu: string;
+
+  @column({ serialize: (value) => value || undefined })
+  public corTextoMenu: string;
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;
 

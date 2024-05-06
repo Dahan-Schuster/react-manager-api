@@ -19,6 +19,10 @@ export default class StoreTemasController {
       textPrimary,
       textSecondary,
       textDisabled,
+      corMenu,
+      corTextoHeader,
+      corHeader,
+      corTextoMenu,
       ...idsPaletasCores
     } = await request.validate(SaveTemaMuiValidator);
 
@@ -62,6 +66,10 @@ export default class StoreTemasController {
           textPrimary,
           textSecondary,
           textDisabled,
+          corMenu,
+          corTextoHeader,
+          corHeader,
+          corTextoMenu,
         });
 
         await tema.save();

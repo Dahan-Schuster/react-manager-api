@@ -34,6 +34,10 @@ export default class SaveTemaMuiValidator {
     textPrimary: schema.string.optional({ trim: true }, [regexHexColor]),
     textSecondary: schema.string.optional({ trim: true }, [regexHexColor]),
     textDisabled: schema.string.optional({ trim: true }, [regexHexColor]),
+    corHeader: schema.string.optional({ trim: true }, [regexHexColor]),
+    corTextoHeader: schema.string.optional({ trim: true }, [regexHexColor]),
+    corMenu: schema.string.optional({ trim: true }, [regexHexColor]),
+    corTextoMenu: schema.string.optional({ trim: true }, [regexHexColor]),
 
     // adiciona as cores do MUI ao schema, definido cada uma como um ID da tabela paletas_cores_sistema
     ...Object.keys(CoresMui).reduce((acc, key) => {
