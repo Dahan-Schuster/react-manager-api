@@ -6,6 +6,7 @@ import SaveTemaMuiValidator from "App/Validators/SaveTemaMuiValidator";
 
 export default class StoreTemasController {
   public async handle({ request, response }: HttpContextContract) {
+    const dados = await request.validate(SaveTemaMuiValidator);
     const {
       nome,
       ativo,
@@ -14,17 +15,11 @@ export default class StoreTemasController {
       fileLogoHeader,
       fileLogoLogin,
       fileLogoSimples,
-      backgroundDefault,
-      backgroundPaper,
-      textPrimary,
-      textSecondary,
-      textDisabled,
-      corMenu,
-      corTextoHeader,
-      corHeader,
-      corTextoMenu,
-      ...idsPaletasCores
-    } = await request.validate(SaveTemaMuiValidator);
+      coresPaleta,
+      ...dadosExtra
+    } = dados;
+
+    coresPaleta && TemaMuiSistema.validarCoresPaleta(coresPaleta);
 
     await Database.transaction(async (trx) => {
       const [urlFavicon, urlLogoHeader] = await Promise.all([
@@ -61,15 +56,8 @@ export default class StoreTemasController {
           urlFavicon,
           urlLogoLogin,
           urlLogoSimples,
-          backgroundDefault,
-          backgroundPaper,
-          textPrimary,
-          textSecondary,
-          textDisabled,
-          corMenu,
-          corTextoHeader,
-          corHeader,
-          corTextoMenu,
+          coresPaleta,
+          ...dadosExtra,
         });
 
         await tema.save();
@@ -78,19 +66,6 @@ export default class StoreTemasController {
         if (ativo) {
           await TemaMuiSistema.inativarOutrosTemas(tema);
         }
-
-        // relaciona os ids das paletas de cores ao tema,
-        // definido a coluna nome_prop_mui de acordo com o
-        // nome da cor no MUI
-        await tema.related("paletasCores").sync(
-          Object.keys(idsPaletasCores).reduce((acc, nomeCorMui) => {
-            const id = idsPaletasCores[nomeCorMui];
-            acc[id] = {
-              nome_prop_mui: nomeCorMui,
-            };
-            return acc;
-          }, {})
-        );
       } catch (e) {
         trx.rollback();
         // deleta imagens do disco caso a transação falhe

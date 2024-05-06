@@ -1,13 +1,16 @@
-import {
-  BaseModel,
-  ManyToMany,
-  column,
-  manyToMany,
-} from "@ioc:Adonis/Lucid/Orm";
+import { BaseModel, column } from "@ioc:Adonis/Lucid/Orm";
+import { CoresMui, VariantesCor } from "App/Enums/CoresMui";
+import ApiError from "App/Exceptions/ApiError";
 import { DateTime } from "luxon";
-import PaletaCoresSistema from "./PaletaCoresSistema";
-import CoresMui from "App/Enums/CoresMui";
-import { ModelObject } from "@ioc:Adonis/Lucid/Orm";
+
+export type CorPaleta = {
+  main: string;
+  light?: string;
+  dark?: string;
+  contrastText?: string;
+};
+
+export type CoresPaleta = Record<string, CorPaleta>;
 
 export default class TemaMuiSistema extends BaseModel {
   public static table = "temas_mui_sistema";
@@ -63,22 +66,14 @@ export default class TemaMuiSistema extends BaseModel {
   @column({ serialize: (value) => value || undefined })
   public corTextoMenu: string;
 
+  @column({ serialize: (value) => value || undefined })
+  public coresPaleta: string;
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime;
-
-  @manyToMany(() => PaletaCoresSistema, {
-    pivotForeignKey: "tema_mui_id",
-    pivotRelatedForeignKey: "paleta_cores_id",
-    pivotTable: "temas_mui_paletas_sistema",
-    pivotColumns: ["nome_prop_mui"],
-    onQuery(query) {
-      query.pivotColumns(["nome_prop_mui"]);
-    },
-  })
-  public paletasCores: ManyToMany<typeof PaletaCoresSistema>;
 
   public static async inativarOutrosTemas(tema: TemaMuiSistema) {
     await TemaMuiSistema.query()
@@ -89,27 +84,59 @@ export default class TemaMuiSistema extends BaseModel {
 
   public static async getAtivo(mode: MUI.MuiMode) {
     const tema = await TemaMuiSistema.query()
-      .preload("paletasCores")
       .where("ativo", true)
       .andWhere("mui_mode", mode)
       .first();
     if (!tema) return null;
-    return { ...TemaMuiSistema.formatarPaletas(tema), paletasCores: undefined };
+    return tema;
   }
 
-  public static formatarPaletas(
-    tema: TemaMuiSistema
-  ): ModelObject & { coresMui?: Record<CoresMui, TemaMuiSistema> } {
-    return {
-      ...tema.toJSON(),
-      coresMui: tema.paletasCores?.reduce((acc, paleta) => {
-        acc[paleta.$extras.pivot_nome_prop_mui] = paleta.serialize({
-          fields: {
-            omit: ["created_at", "updated_at", "nome", "id"],
-          },
-        });
-        return acc;
-      }, {} as Record<CoresMui, TemaMuiSistema>),
-    };
+  public static validarCoresPaleta(coresPaletaJSON: string) {
+    let coresPaleta: CoresPaleta | null;
+    try {
+      coresPaleta = JSON.parse(coresPaletaJSON) as CoresPaleta;
+    } catch {
+      throw new ApiError(
+        "coresPaleta: Objeto de paleta de cores inválido",
+        400
+      );
+    }
+
+    if (!coresPaleta || Object.keys(coresPaleta).length === 0)
+      throw new ApiError(
+        "coresPaleta: Objeto de paleta de cores inválido",
+        400
+      );
+
+    const nomesCores = Object.keys(CoresMui);
+    const variantesCores = Object.keys(VariantesCor);
+
+    for (const key in coresPaleta) {
+      if (!nomesCores.includes(key))
+        throw new ApiError(
+          `coresPaleta: Cor ${key} não faz parte das paletas MUI`,
+          400
+        );
+
+      const cor = coresPaleta[key];
+      if (!cor.main)
+        throw new ApiError(
+          `coresPaleta: Valor main faltante na cor ${key}`,
+          400
+        );
+
+      for (const varianteCor in cor) {
+        if (!variantesCores.includes(varianteCor))
+          throw new ApiError(
+            `coresPaleta: Variante ${varianteCor} não faz parte das variantes MUI`,
+            400
+          );
+        if (/^#[0-9A-F]{6}$/i.test(cor[varianteCor]) === false)
+          throw new ApiError(
+            `coresPaleta: Valor ${varianteCor} inválido na cor ${key}`,
+            400
+          );
+      }
+    }
   }
 }

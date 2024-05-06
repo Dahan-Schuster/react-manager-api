@@ -1,4 +1,4 @@
-enum CoresMui {
+export enum CoresMui {
   primary = "primary",
   secondary = "secondary",
   error = "error",
@@ -7,4 +7,9 @@ enum CoresMui {
   warning = "warning",
 }
 
-export default CoresMui;
+export enum VariantesCor {
+  main = "main",
+  light = "light",
+  dark = "dark",
+  contrastText = "contrastText",
+}

@@ -1,12 +1,10 @@
+import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import {
-  schema,
-  rules,
   CustomMessages,
   Rule,
-  SchemaLiteral,
+  rules,
+  schema,
 } from "@ioc:Adonis/Core/Validator";
-import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
-import CoresMui from "App/Enums/CoresMui";
 import { opcoesImagemTema, regexHexColor } from "App/Enums/Rules";
 import { defaultValidationMessages } from "App/Enums/ValidationMessages";
 
@@ -39,16 +37,7 @@ export default class SaveTemaMuiValidator {
     corMenu: schema.string.optional({ trim: true }, [regexHexColor]),
     corTextoMenu: schema.string.optional({ trim: true }, [regexHexColor]),
 
-    // adiciona as cores do MUI ao schema, definido cada uma como um ID da tabela paletas_cores_sistema
-    ...Object.keys(CoresMui).reduce((acc, key) => {
-      acc[key] = schema.number.optional([
-        rules.exists({
-          table: "paletas_cores_sistema",
-          column: "id",
-        }),
-      ]);
-      return acc;
-    }, {} as Record<CoresMui, { t?: number; getTree(): SchemaLiteral }>),
+    coresPaleta: schema.string.optional(),
   });
 
   public messages: CustomMessages = defaultValidationMessages;

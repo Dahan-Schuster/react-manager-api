@@ -28,8 +28,10 @@ export default class UpdateTemasController {
       corTextoHeader,
       corHeader,
       corTextoMenu,
-      ...idsPaletasCores
+      coresPaleta,
     } = await request.validate(SaveTemaMuiValidator);
+
+    coresPaleta && TemaMuiSistema.validarCoresPaleta(coresPaleta);
 
     await Database.transaction(async (trx) => {
       const tema = await TemaMuiSistema.findOrFail(id);
@@ -47,6 +49,7 @@ export default class UpdateTemasController {
         corTextoHeader,
         corHeader,
         corTextoMenu,
+        coresPaleta,
       });
 
       if (fileFavicon) {
@@ -83,22 +86,6 @@ export default class UpdateTemasController {
 
       try {
         await tema.save();
-
-        // relaciona os ids das paletas de cores ao tema,
-        // definido a coluna nome_prop_mui de acordo com o
-        // nome da cor no MUI
-        if (Object.keys(idsPaletasCores).length > 0) {
-          await tema.related("paletasCores").detach();
-          await tema.related("paletasCores").attach(
-            Object.keys(idsPaletasCores).reduce((acc, nomeCorMui) => {
-              const id = idsPaletasCores[nomeCorMui];
-              acc[id] = {
-                nome_prop_mui: nomeCorMui,
-              };
-              return acc;
-            }, {})
-          );
-        }
       } catch (e) {
         trx.rollback();
         // deleta imagens do disco caso a transação falhe
