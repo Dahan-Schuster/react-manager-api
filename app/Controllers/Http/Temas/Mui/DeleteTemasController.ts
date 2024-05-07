@@ -10,14 +10,13 @@ export default class DeleteTemasController {
       const tema = await TemaMuiSistema.findOrFail(id);
       tema.useTransaction(trx);
 
-      await tema.related("paletasCores").detach();
       await tema.delete();
 
       await Promise.all([
-        UploadImagem.delete(tema.urlFavicon),
-        UploadImagem.delete(tema.urlLogoHeader),
-        UploadImagem.delete(tema.urlLogoLogin),
-        UploadImagem.delete(tema.urlLogoSimples),
+        UploadImagem.delete(tema.url_favicon),
+        UploadImagem.delete(tema.url_logo_header),
+        UploadImagem.delete(tema.url_logo_login),
+        UploadImagem.delete(tema.url_logo_simples),
       ]);
 
       response.send({

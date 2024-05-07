@@ -10,19 +10,19 @@ export default class StoreTemasController {
     const {
       nome,
       ativo,
-      muiMode,
-      fileFavicon,
-      fileLogoHeader,
-      fileLogoLogin,
-      fileLogoSimples,
-      coresPaleta,
+      mui_mode,
+      file_favicon: fileFavicon,
+      file_logo_header: fileLogoHeader,
+      file_logo_login: fileLogoLogin,
+      file_logo_simples: fileLogoSimples,
+      cores_paleta,
       ...dadosExtra
     } = dados;
 
-    coresPaleta && TemaMuiSistema.validarCoresPaleta(coresPaleta);
+    cores_paleta && TemaMuiSistema.validarCoresPaleta(cores_paleta);
 
     await Database.transaction(async (trx) => {
-      const [urlFavicon, urlLogoHeader] = await Promise.all([
+      const [url_favicon, url_logo_header] = await Promise.all([
         await UploadImagem.upload(fileFavicon!, {
           name: `favicon-tema-${nome}`,
         }),
@@ -31,16 +31,16 @@ export default class StoreTemasController {
         }),
       ]);
 
-      let urlLogoLogin = urlLogoHeader;
+      let url_logo_login = url_logo_header;
       if (fileLogoLogin) {
-        urlLogoLogin = await UploadImagem.upload(fileLogoLogin, {
+        url_logo_login = await UploadImagem.upload(fileLogoLogin, {
           name: `logoLogin-tema-${nome}`,
         });
       }
 
-      let urlLogoSimples = urlLogoHeader;
+      let url_logo_simples = url_logo_header;
       if (fileLogoSimples) {
-        urlLogoSimples = await UploadImagem.upload(fileLogoSimples, {
+        url_logo_simples = await UploadImagem.upload(fileLogoSimples, {
           name: `logoSimples-tema-${nome}`,
         });
       }
@@ -51,12 +51,12 @@ export default class StoreTemasController {
         tema.fill({
           nome,
           ativo: ativo ? 1 : 0,
-          muiMode: muiMode as MUI.MuiMode,
-          urlLogoHeader,
-          urlFavicon,
-          urlLogoLogin,
-          urlLogoSimples,
-          coresPaleta,
+          mui_mode: mui_mode as MUI.MuiMode,
+          url_logo_header,
+          url_favicon,
+          url_logo_login,
+          url_logo_simples,
+          cores_paleta,
           ...dadosExtra,
         });
 
@@ -70,10 +70,10 @@ export default class StoreTemasController {
         trx.rollback();
         // deleta imagens do disco caso a transação falhe
         await Promise.all([
-          UploadImagem.delete(urlFavicon),
-          UploadImagem.delete(urlLogoHeader),
-          UploadImagem.delete(urlLogoLogin),
-          UploadImagem.delete(urlLogoSimples),
+          UploadImagem.delete(url_favicon),
+          UploadImagem.delete(url_logo_header),
+          UploadImagem.delete(url_logo_login),
+          UploadImagem.delete(url_logo_simples),
         ]);
         throw e;
       }

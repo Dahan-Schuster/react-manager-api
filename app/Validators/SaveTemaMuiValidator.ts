@@ -16,28 +16,31 @@ export default class SaveTemaMuiValidator {
   public schema = schema.create({
     id: schema.number.optional(),
     nome: schema.string.optional({ trim: true }, this.requiredRules),
-    ativo: schema.boolean.optional(this.requiredRules),
-    muiMode: schema.enum.optional(["light", "dark"], this.requiredRules),
+    ativo: schema.boolean.optional(),
+    mui_mode: schema.enum.optional(["light", "dark"], this.requiredRules),
 
-    fileFavicon: schema.file.optional(
+    file_favicon: schema.file.optional(
       { size: "1mb", extnames: ["ico"] },
       this.requiredRules
     ),
-    fileLogoHeader: schema.file.optional(opcoesImagemTema, this.requiredRules),
-    fileLogoLogin: schema.file.optional(opcoesImagemTema),
-    fileLogoSimples: schema.file.optional(opcoesImagemTema),
+    file_logo_header: schema.file.optional(
+      opcoesImagemTema,
+      this.requiredRules
+    ),
+    file_logo_login: schema.file.optional(opcoesImagemTema),
+    file_logo_simples: schema.file.optional(opcoesImagemTema),
 
-    backgroundDefault: schema.string.optional({ trim: true }, [regexHexColor]),
-    backgroundPaper: schema.string.optional({ trim: true }, [regexHexColor]),
-    textPrimary: schema.string.optional({ trim: true }, [regexHexColor]),
-    textSecondary: schema.string.optional({ trim: true }, [regexHexColor]),
-    textDisabled: schema.string.optional({ trim: true }, [regexHexColor]),
-    corHeader: schema.string.optional({ trim: true }, [regexHexColor]),
-    corTextoHeader: schema.string.optional({ trim: true }, [regexHexColor]),
-    corMenu: schema.string.optional({ trim: true }, [regexHexColor]),
-    corTextoMenu: schema.string.optional({ trim: true }, [regexHexColor]),
+    background_default: schema.string.optional({ trim: true }, [regexHexColor]),
+    background_paper: schema.string.optional({ trim: true }, [regexHexColor]),
+    text_primary: schema.string.optional({ trim: true }, [regexHexColor]),
+    text_secondary: schema.string.optional({ trim: true }, [regexHexColor]),
+    text_disabled: schema.string.optional({ trim: true }, [regexHexColor]),
+    cor_header: schema.string.optional({ trim: true }, [regexHexColor]),
+    cor_texto_header: schema.string.optional({ trim: true }, [regexHexColor]),
+    cor_menu: schema.string.optional({ trim: true }, [regexHexColor]),
+    cor_texto_menu: schema.string.optional({ trim: true }, [regexHexColor]),
 
-    coresPaleta: schema.string.optional(),
+    cores_paleta: schema.string.optional(),
   });
 
   public messages: CustomMessages = defaultValidationMessages;

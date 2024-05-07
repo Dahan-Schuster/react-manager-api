@@ -25,49 +25,49 @@ export default class TemaMuiSistema extends BaseModel {
   public ativo: 0 | 1;
 
   @column()
-  public muiMode: MUI.MuiMode;
+  public mui_mode: MUI.MuiMode;
 
   @column()
-  public urlFavicon: string;
+  public url_favicon: string;
 
   @column()
-  public urlLogoHeader: string;
+  public url_logo_header: string;
 
   @column()
-  public urlLogoLogin: string;
+  public url_logo_login: string;
 
   @column()
-  public urlLogoSimples: string;
+  public url_logo_simples: string;
 
   @column({ serialize: (value) => value || undefined })
-  public backgroundDefault: string;
+  public background_default: string;
 
   @column({ serialize: (value) => value || undefined })
-  public backgroundPaper: string;
+  public background_paper: string;
 
   @column({ serialize: (value) => value || undefined })
-  public textPrimary: string;
+  public text_primary: string;
 
   @column({ serialize: (value) => value || undefined })
-  public textSecondary: string;
+  public text_secondary: string;
 
   @column({ serialize: (value) => value || undefined })
-  public textDisabled: string;
+  public text_disabled: string;
 
   @column({ serialize: (value) => value || undefined })
-  public corHeader: string;
+  public cor_header: string;
 
   @column({ serialize: (value) => value || undefined })
-  public corTextoHeader: string;
+  public cor_texto_header: string;
 
   @column({ serialize: (value) => value || undefined })
-  public corMenu: string;
+  public cor_menu: string;
 
   @column({ serialize: (value) => value || undefined })
-  public corTextoMenu: string;
+  public cor_texto_menu: string;
 
   @column({ serialize: (value) => value || undefined })
-  public coresPaleta: string;
+  public cores_paleta: string;
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;
@@ -78,7 +78,7 @@ export default class TemaMuiSistema extends BaseModel {
   public static async inativarOutrosTemas(tema: TemaMuiSistema) {
     await TemaMuiSistema.query()
       .where("id", "!=", tema.id)
-      .andWhere("muiMode", tema.muiMode)
+      .andWhere("muiMode", tema.mui_mode)
       .update({ ativo: 0 });
   }
 

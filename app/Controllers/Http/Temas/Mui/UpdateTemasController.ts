@@ -14,24 +14,24 @@ export default class UpdateTemasController {
     const {
       id,
       nome,
-      muiMode,
-      fileFavicon,
-      fileLogoHeader,
-      fileLogoLogin,
-      fileLogoSimples,
-      backgroundDefault,
-      backgroundPaper,
-      textPrimary,
-      textSecondary,
-      textDisabled,
-      corMenu,
-      corTextoHeader,
-      corHeader,
-      corTextoMenu,
-      coresPaleta,
+      mui_mode,
+      file_favicon: fileFavicon,
+      file_logo_header: fileLogoHeader,
+      file_logo_login: fileLogoLogin,
+      file_logo_simples: fileLogoSimples,
+      background_default,
+      background_paper,
+      text_primary,
+      text_secondary,
+      text_disabled,
+      cor_menu,
+      cor_texto_header,
+      cor_header,
+      cor_texto_menu,
+      cores_paleta,
     } = await request.validate(SaveTemaMuiValidator);
 
-    coresPaleta && TemaMuiSistema.validarCoresPaleta(coresPaleta);
+    cores_paleta && TemaMuiSistema.validarCoresPaleta(cores_paleta);
 
     await Database.transaction(async (trx) => {
       const tema = await TemaMuiSistema.findOrFail(id);
@@ -41,49 +41,49 @@ export default class UpdateTemasController {
 
       tema.merge({
         nome,
-        muiMode: muiMode as MUI.MuiMode,
-        backgroundDefault,
-        backgroundPaper,
-        textPrimary,
-        textSecondary,
-        textDisabled,
-        corMenu,
-        corTextoHeader,
-        corHeader,
-        corTextoMenu,
-        coresPaleta,
+        mui_mode: mui_mode as MUI.MuiMode,
+        background_default,
+        background_paper,
+        text_primary,
+        text_secondary,
+        text_disabled,
+        cor_menu,
+        cor_texto_header,
+        cor_header,
+        cor_texto_menu,
+        cores_paleta,
       });
 
       if (fileFavicon) {
-        await UploadImagem.delete(tema.urlFavicon);
-        tema.urlFavicon = await UploadImagem.upload(fileFavicon, {
+        await UploadImagem.delete(tema.url_favicon);
+        tema.url_favicon = await UploadImagem.upload(fileFavicon, {
           name: `favicon-tema-${nomeTema}`,
         });
       }
 
       if (fileLogoHeader) {
-        await UploadImagem.delete(tema.urlLogoHeader);
-        tema.urlLogoHeader = await UploadImagem.upload(fileLogoHeader, {
+        await UploadImagem.delete(tema.url_logo_header);
+        tema.url_logo_header = await UploadImagem.upload(fileLogoHeader, {
           name: `logoHeader-tema-${nomeTema}`,
         });
       }
 
       if (fileLogoLogin) {
-        await UploadImagem.delete(tema.urlLogoLogin);
-        tema.urlLogoLogin = await UploadImagem.upload(fileLogoLogin, {
+        await UploadImagem.delete(tema.url_logo_login);
+        tema.url_logo_login = await UploadImagem.upload(fileLogoLogin, {
           name: `logoLogin-tema-${nomeTema}`,
         });
       } else {
-        tema.urlLogoLogin = tema.urlLogoHeader;
+        tema.url_logo_login = tema.url_logo_header;
       }
 
       if (fileLogoSimples) {
-        await UploadImagem.delete(tema.urlLogoSimples);
-        tema.urlLogoSimples = await UploadImagem.upload(fileLogoSimples, {
+        await UploadImagem.delete(tema.url_logo_simples);
+        tema.url_logo_simples = await UploadImagem.upload(fileLogoSimples, {
           name: `logoSimples-tema-${nomeTema}`,
         });
       } else {
-        tema.urlLogoSimples = tema.urlLogoHeader;
+        tema.url_logo_simples = tema.url_logo_header;
       }
 
       try {
@@ -92,10 +92,10 @@ export default class UpdateTemasController {
         trx.rollback();
         // deleta imagens do disco caso a transação falhe
         await Promise.all([
-          UploadImagem.delete(tema.urlFavicon),
-          UploadImagem.delete(tema.urlLogoHeader),
-          UploadImagem.delete(tema.urlLogoLogin),
-          UploadImagem.delete(tema.urlLogoSimples),
+          UploadImagem.delete(tema.url_favicon),
+          UploadImagem.delete(tema.url_logo_header),
+          UploadImagem.delete(tema.url_logo_login),
+          UploadImagem.delete(tema.url_logo_simples),
         ]);
         throw e;
       }
