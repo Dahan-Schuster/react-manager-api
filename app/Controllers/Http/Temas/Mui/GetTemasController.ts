@@ -3,9 +3,7 @@ import TemaMuiSistema from "App/Models/TemaMuiSistema";
 
 export default class GetTemasController {
   public async handle({ response }: HttpContextContract) {
-    const temas = await TemaMuiSistema.query()
-      .orderBy("nome", "asc")
-      .orderBy("id", "asc");
+    const temas = await TemaMuiSistema.query().orderBy("id", "asc");
 
     response.send({
       success: true,
