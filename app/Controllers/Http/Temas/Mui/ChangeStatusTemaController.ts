@@ -15,9 +15,12 @@ export default class ChangeStatusTemaController {
 
       await tema.save();
 
+      const temas = await TemaMuiSistema.query().orderBy("id", "asc");
+
       return response.send({
         success: true,
         tema,
+        temas,
       });
     });
   }
