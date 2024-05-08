@@ -66,7 +66,17 @@ export default class TemaMuiSistema extends BaseModel {
   @column({ serialize: (value) => value || undefined })
   public cor_texto_menu: string;
 
-  @column({ serialize: (value) => value || undefined })
+  @column({
+    serialize: (value) => {
+      if (!value) return undefined;
+
+      if (typeof value === "string") {
+        return JSON.parse(value);
+      }
+
+      return value;
+    },
+  })
   public cores_paleta: string;
 
   @column.dateTime({ autoCreate: true })
