@@ -6,6 +6,7 @@ export default class GetItensMenuController {
     const itens = await MenuItem.query()
       .preload("children")
       .whereNull("parent_id")
+      .orderBy("ordem", "asc")
       .orderBy("label", "asc")
       .orderBy("id", "asc");
 

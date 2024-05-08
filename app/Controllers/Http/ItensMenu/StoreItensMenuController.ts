@@ -11,6 +11,8 @@ export default class StoreItensMenuController {
       url: schema.string.optional({ trim: true }),
       target: schema.enum.optional(["_self", "_blank", "_parent", "_top"]),
       icone: schema.string.optional(),
+      ordem: schema.number([rules.unsigned()]),
+      publico: schema.boolean.optional(),
       parent_id: schema.number.optional([
         rules.exists({ table: "menu_itens", column: "id" }),
       ]),

@@ -32,6 +32,12 @@ export default class MenuItem extends BaseModel {
   @column({ serialize: (value) => Boolean(value) })
   public ativo: boolean;
 
+  @column({ serialize: (value) => Boolean(value) })
+  public publico: boolean;
+
+  @column()
+  public ordem: number;
+
   @column()
   public parent_id: number | null;
 
