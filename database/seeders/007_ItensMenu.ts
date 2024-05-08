@@ -12,14 +12,26 @@ const permissoesItens = {
 export default class extends BaseSeeder {
   public async run() {
     const itens = await MenuItem.fetchOrCreateMany(
-      ["url", "target"],
+      ["url", "target", "publico"],
       [
+        {
+          label: "Página inicial",
+          url: "/",
+          target: "_self",
+          icone: "home",
+          ativo: true,
+          publico: true,
+          ordem: 1,
+          parent_id: null,
+        },
         {
           label: "Usuários",
           url: "/usuarios",
           target: "_self",
           icone: "people",
           ativo: true,
+          publico: false,
+          ordem: 2,
           parent_id: null,
         },
         {
@@ -28,6 +40,8 @@ export default class extends BaseSeeder {
           target: "_self",
           icone: "account_box",
           ativo: true,
+          publico: false,
+          ordem: 3,
           parent_id: null,
         },
         {
@@ -36,6 +50,8 @@ export default class extends BaseSeeder {
           target: "_self",
           icone: "palette",
           ativo: true,
+          publico: false,
+          ordem: 4,
           parent_id: null,
         },
         {
@@ -44,6 +60,8 @@ export default class extends BaseSeeder {
           target: "_self",
           icone: "add_circle",
           ativo: true,
+          publico: false,
+          ordem: 4.1,
           parent_id: null,
         },
       ]
