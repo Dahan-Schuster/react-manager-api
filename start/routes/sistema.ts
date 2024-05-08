@@ -35,10 +35,9 @@ Route.group(() => {
     Route.delete("/:id", "Temas/Mui/DeleteTemasController").middleware(
       "auth:temas-deletar"
     );
-    Route.put(
-      ":id/alterar-status",
-      "Temas/Mui/ChangeStatusTemaController"
-    ).middleware("auth:temas-alterar-status");
+    Route.put(":id/ativar", "Temas/Mui/AtivarTemaController").middleware(
+      "auth:temas-alterar-status"
+    );
   }).prefix("temas-mui");
 
   Route.group(() => {

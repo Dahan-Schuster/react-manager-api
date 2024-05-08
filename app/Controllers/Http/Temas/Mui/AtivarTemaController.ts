@@ -1,8 +1,9 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import Database from "@ioc:Adonis/Lucid/Database";
+import ApiError from "App/Exceptions/ApiError";
 import TemaMuiSistema from "App/Models/TemaMuiSistema";
 
-export default class ChangeStatusTemaController {
+export default class AtivarTemaController {
   public async handle({ request, response }: HttpContextContract) {
     const { id } = request.params();
 
@@ -10,8 +11,12 @@ export default class ChangeStatusTemaController {
       const tema = await TemaMuiSistema.findOrFail(id);
       tema.useTransaction(trx);
 
+      if (tema.ativo) {
+        throw new ApiError("Tema já está ativo", 400);
+      }
+
       await TemaMuiSistema.inativarOutrosTemas(tema);
-      tema.ativo = tema.ativo ? 0 : 1;
+      tema.ativo = 1;
 
       await tema.save();
 
