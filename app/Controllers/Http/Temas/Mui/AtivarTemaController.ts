@@ -19,6 +19,7 @@ export default class AtivarTemaController {
       tema.ativo = 1;
 
       await tema.save();
+      await trx.commit();
 
       const temas = await TemaMuiSistema.query().orderBy("id", "asc");
 
