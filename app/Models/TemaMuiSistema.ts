@@ -78,7 +78,7 @@ export default class TemaMuiSistema extends BaseModel {
   public static async inativarOutrosTemas(tema: TemaMuiSistema) {
     await TemaMuiSistema.query()
       .where("id", "!=", tema.id)
-      .andWhere("muiMode", tema.mui_mode)
+      .andWhere("mui_mode", tema.mui_mode)
       .update({ ativo: 0 });
   }
 
