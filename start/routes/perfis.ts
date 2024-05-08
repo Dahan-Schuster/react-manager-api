@@ -5,6 +5,9 @@ Route.group(() => {
   Route.get("/permissoes", "Perfis/GetPerfisPermissoesController").middleware(
     "auth:perfis-listar"
   );
+  Route.get("/:id", "Perfis/ShowPerfilController").middleware(
+    "auth:perfis-listar"
+  );
 
   Route.post("/", "Perfis/StorePerfisController").middleware(
     "auth:perfis-criar"

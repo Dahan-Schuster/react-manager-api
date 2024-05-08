@@ -6,7 +6,9 @@ import Perfil from "App/Models/Perfil";
 export default class StorePerfisController {
   public async handle({ request, response }: HttpContextContract) {
     const validationSchema = schema.create({
-      nome: schema.string([rules.unique({ table: "perfis", column: "nome" })]),
+      nome: schema.string({ trim: true }, [
+        rules.unique({ table: "perfis", column: "nome" }),
+      ]),
       permissoes: schema.array
         .optional()
         .members(
