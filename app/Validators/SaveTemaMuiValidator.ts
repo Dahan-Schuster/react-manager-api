@@ -20,7 +20,7 @@ export default class SaveTemaMuiValidator {
     mui_mode: schema.enum.optional(["light", "dark"], this.requiredRules),
 
     file_favicon: schema.file.optional(
-      { size: "1mb", extnames: ["ico"] },
+      { size: "500kb", extnames: ["ico"] },
       this.requiredRules
     ),
     file_logo_header: schema.file.optional(
