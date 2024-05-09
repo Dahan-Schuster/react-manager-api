@@ -12,6 +12,9 @@ export const defaultValidationMessages: CustomMessages = {
   requiredIfNotExists:
     "{{ field }} é obrigatório se {{ options.otherField }} não estiver preenchido",
   enum: "Valores disponíveis para o campo {{ field }}: {{ options.choices }}",
+  "file.size": "O tamanho do arquivo deve ser no máximo {{ options.size }}",
+  "file.extname":
+    "Tipo de arquivo inválido para o arquivo {{ field }}. Tipo esperado: {{ extnames }}",
 };
 
 export const userValidationMessages: CustomMessages = {

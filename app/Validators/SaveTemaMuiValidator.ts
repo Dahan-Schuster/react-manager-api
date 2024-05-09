@@ -43,5 +43,15 @@ export default class SaveTemaMuiValidator {
     cores_paleta: schema.string.optional(),
   });
 
-  public messages: CustomMessages = defaultValidationMessages;
+  public messages: CustomMessages = {
+    ...defaultValidationMessages,
+    "file_favicon.size":
+      "O tamanho do favicon deve ser no máximo {{ options.size }}",
+    "file_favicon.extname":
+      "Tipo de arquivo inválido para favicon. Tipo esperado: {{ extnames }}",
+    "file.size":
+      "O tamanho da imagem de logo deve ser no máximo {{ options.size }}",
+    "file.extname":
+      "Tipo de arquivo inválido para a imagem de logo. Tipo esperado: {{ options.extnames }}",
+  };
 }
