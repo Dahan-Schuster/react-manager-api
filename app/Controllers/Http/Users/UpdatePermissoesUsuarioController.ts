@@ -66,7 +66,13 @@ export default class UpdatePermissoesUsuarioController {
 
       response.send({
         success: true,
-        user: user.toJSON(),
+        user: {
+          ...user.toJSON(),
+          permissoes: user.permissoes?.map((p) => ({
+            ...p.toJSON(),
+            fixada: p.$extras.pivot_permissao_fixada,
+          })),
+        },
       });
     });
   }
