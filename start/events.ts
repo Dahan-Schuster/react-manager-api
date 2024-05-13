@@ -12,6 +12,8 @@ import Event from "@ioc:Adonis/Core/Event";
 import Logger from "@ioc:Adonis/Core/Logger";
 import ApiError from "App/Exceptions/ApiError";
 
+import "./events/users";
+
 Event.onError((event, error, eventData) => {
   if (error instanceof ApiError) {
     Logger.error(

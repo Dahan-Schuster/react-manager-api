@@ -1,3 +1,4 @@
+import Event from "@ioc:Adonis/Core/Event";
 import Env from "@ioc:Adonis/Core/Env";
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import { rules, schema } from "@ioc:Adonis/Core/Validator";
@@ -13,7 +14,8 @@ import randomstring from "randomstring";
 const minPasswordLength = Env.get("MIN_PASSWORD_LENGTH");
 
 export default class StoreUsersController {
-  public async handle({ request, response }: HttpContextContract) {
+  public async handle(ctx: HttpContextContract) {
+    const { request, response } = ctx;
     const newUserSchema = schema.create({
       nome: schema.string(),
       email: schema.string([rules.email()]),
@@ -72,6 +74,12 @@ export default class StoreUsersController {
       if (user.perfilId) {
         await user.load("perfil");
       }
+
+      Event.emit("new:user", {
+        user: user.toJSON(),
+        origem: "Ação manual",
+        ctx,
+      });
 
       response.send({
         success: true,
