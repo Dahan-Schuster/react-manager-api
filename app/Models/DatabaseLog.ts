@@ -7,13 +7,19 @@ export default class DatabaseLog extends BaseModel {
   public id: number;
 
   @column()
-  public evento: string;
+  public modulo: string;
+
+  @column()
+  public operacao: string;
 
   @column()
   public origem: string;
 
   @column()
   public observacoes: string | null;
+
+  @column()
+  public request_id: string | null;
 
   @column({
     serialize: (value) => {
