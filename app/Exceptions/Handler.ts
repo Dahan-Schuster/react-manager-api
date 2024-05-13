@@ -101,7 +101,7 @@ export default class ExceptionHandler extends HttpExceptionHandler {
   ) {
     const { code, message } = exception;
     if (code >= 500) {
-      logger.error({ message, code }, "Erro do servidor");
+      logger.error({ message, code, err: exception }, "Erro do servidor");
     } else {
       logger.warn({ message, code }, "Erro do cliente");
     }
