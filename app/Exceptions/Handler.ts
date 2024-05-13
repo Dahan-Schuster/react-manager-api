@@ -29,22 +29,25 @@ export default class ExceptionHandler extends HttpExceptionHandler {
     super(Logger);
   }
 
-  private getErrorResponses = new Map<
+  private getErrorResponses: Map<
     string,
     (error?: any) => [number, ErrorResponse]
-  >()
+  > = new Map()
     .set("E_UNAUTHORIZED_ACCESS", () => [
       401,
       { success: false, error: "Usuário não autenticado" },
     ])
-    .set("E_VALIDATION_FAILURE", (error) => [
-      422,
-      {
-        success: false,
-        error: error.messages.errors[0].message,
-        ...error.messages,
-      },
-    ])
+    .set(
+      "E_VALIDATION_FAILURE",
+      (error: { messages: { errors: { message: any }[] } }) => [
+        422,
+        {
+          success: false,
+          error: error.messages.errors[0].message,
+          ...error.messages,
+        },
+      ]
+    )
     .set("E_ROUTE_NOT_FOUND", () => [
       404,
       { success: false, error: "Rota não encontrada" },
@@ -65,10 +68,10 @@ export default class ExceptionHandler extends HttpExceptionHandler {
       { success: false, error: "Tabela não encontrada" },
     ]);
 
-  private defaultHandler = (error: any) => {
-    console.log("Erro desconhecido:", error);
-    return [500, { success: false, error: "Erro desconhecido" }];
-  };
+  private defaultHandler = (): [number, ErrorResponse] => [
+    500,
+    { success: false, error: "Erro desconhecido" },
+  ];
 
   public async handle(error: any, ctx: HttpContextContract) {
     if (error instanceof ApiError) {
@@ -82,10 +85,30 @@ export default class ExceptionHandler extends HttpExceptionHandler {
       const [httpCode, errorResponse] = handler(error);
       return ctx.response.status(httpCode).send(errorResponse);
     }
+  }
 
-    /**
-     * Forward rest of the exceptions to the parent class
-     */
-    // return super.handle(error, ctx)
+  public async report(error: any, { logger }: HttpContextContract) {
+    if (error instanceof ApiError) {
+      if (error.code >= 500) {
+        logger.error({ err: error }, "Erro do servidor");
+      } else {
+        logger.warn(
+          { code: error.code, message: error.message },
+          "Erro do cliente"
+        );
+      }
+    } else {
+      const handler =
+        this.getErrorResponses.get(error.code) || this.defaultHandler;
+      const [httpCode, errorResponse] = handler(error);
+      if (httpCode >= 500) {
+        logger.error({ code: httpCode, err: error }, errorResponse.error);
+      } else {
+        logger.warn(
+          { code: httpCode, err: errorResponse },
+          errorResponse.error
+        );
+      }
+    }
   }
 }
