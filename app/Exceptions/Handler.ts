@@ -87,28 +87,37 @@ export default class ExceptionHandler extends HttpExceptionHandler {
     }
   }
 
-  public async report(error: any, { logger }: HttpContextContract) {
-    if (error instanceof ApiError) {
-      if (error.code >= 500) {
-        logger.error({ err: error }, "Erro do servidor");
-      } else {
-        logger.warn(
-          { code: error.code, message: error.message },
-          "Erro do cliente"
-        );
-      }
+  public async report(exception: any, { logger }: HttpContextContract) {
+    if (exception instanceof ApiError) {
+      this.logApiError(exception, logger);
     } else {
-      const handler =
-        this.getErrorResponses.get(error.code) || this.defaultHandler;
-      const [httpCode, errorResponse] = handler(error);
-      if (httpCode >= 500) {
-        logger.error({ code: httpCode, err: error }, errorResponse.error);
-      } else {
-        logger.warn(
-          { code: httpCode, err: errorResponse },
-          errorResponse.error
-        );
-      }
+      this.logDefaultError(exception, logger);
+    }
+  }
+
+  private logApiError(
+    exception: ApiError,
+    logger: HttpContextContract["logger"]
+  ) {
+    const { code, message } = exception;
+    if (code >= 500) {
+      logger.error({ message, code }, "Erro do servidor");
+    } else {
+      logger.warn({ message, code }, "Erro do cliente");
+    }
+  }
+
+  private logDefaultError(
+    exception: any,
+    logger: HttpContextContract["logger"]
+  ) {
+    const handler =
+      this.getErrorResponses.get(exception.code) || this.defaultHandler;
+    const [httpCode, errorResponse] = handler(exception);
+    if (httpCode >= 500) {
+      logger.error({ code: httpCode, err: exception }, errorResponse.error);
+    } else {
+      logger.warn({ code: httpCode, err: errorResponse }, errorResponse.error);
     }
   }
 }
