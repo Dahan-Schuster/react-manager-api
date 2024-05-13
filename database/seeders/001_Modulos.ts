@@ -8,6 +8,7 @@ export default class extends BaseSeeder {
       { nome: "Usuários" },
       { nome: "Temas" },
       { nome: "Itens Menu" },
+      { nome: "Logs" },
     ]);
   }
 }

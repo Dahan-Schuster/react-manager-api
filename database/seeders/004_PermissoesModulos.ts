@@ -127,6 +127,14 @@ export default class extends BaseSeeder {
           label: "Deletar item do menu",
           slug: "itens-menu-deletar",
         },
+
+        // Logs
+        {
+          tipoId: 1,
+          moduloId: 5,
+          label: "Listar logs",
+          slug: "logs-listar",
+        },
       ]
     );
   }

@@ -42,4 +42,10 @@ Route.group(() => {
       "auth:itens-menu-deletar"
     );
   }).prefix("itens-menu");
+
+  Route.group(() => {
+    Route.get("", "DatabaseLogs/GetDatabaseLogsController").middleware(
+      "auth:logs-listar"
+    );
+  }).prefix("logs");
 }).prefix("sistema");
