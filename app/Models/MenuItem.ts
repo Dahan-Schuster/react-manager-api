@@ -9,10 +9,16 @@ import {
   hasMany,
   manyToMany,
 } from "@ioc:Adonis/Lucid/Orm";
+
+import { compose } from "@ioc:Adonis/Core/Helpers";
+import { AutoPreload } from "@ioc:Adonis/Addons/AutoPreload";
+
 import Permissao from "./Permissao";
 
-export default class MenuItem extends BaseModel {
+export default class MenuItem extends compose(BaseModel, AutoPreload) {
   public static table = "menu_itens";
+
+  public static $with = ["children"] as const;
 
   @column({ isPrimary: true })
   public id: number;

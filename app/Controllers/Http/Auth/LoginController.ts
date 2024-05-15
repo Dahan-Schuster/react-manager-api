@@ -27,23 +27,14 @@ export default class LoginController {
 
       await user.load("permissoes", (query) => {
         query.preload("menuItens", (query) => {
-          query
-            .where("ativo", true)
-            .andWhere("publico", false)
-            .preload("children");
+          query.where("ativo", true).andWhere("publico", false);
         });
       });
 
-      const itensPublicos = await MenuItem.query()
-        .where("publico", true)
-        .andWhere("ativo", true)
-        .preload("children");
+      const itensPublicos = await MenuItem.query().where("publico", true).andWhere("ativo", true);
 
       // agrupa os itens de menu de cada permissão em um único array
-      const itensMenuFlat = [
-        ...itensPublicos,
-        ...user.permissoes.map((p) => p.menuItens).flat(),
-      ];
+      const itensMenuFlat = [...itensPublicos, ...user.permissoes.map((p) => p.menuItens).flat()];
 
       // formata a lista de menus, removendo os subitens que o usuário não tem permissão para acessar
       const itensMenu = itensMenuFlat
@@ -66,10 +57,7 @@ export default class LoginController {
             })
         )
         // remove itens duplicados
-        .filter(
-          (value, index, self) =>
-            index === self.findIndex((item) => item.id === value.id)
-        )
+        .filter((value, index, self) => index === self.findIndex((item) => item.id === value.id))
         // ordena pelo campo ordem
         .sort((a, b) => a.ordem - b.ordem);
 
