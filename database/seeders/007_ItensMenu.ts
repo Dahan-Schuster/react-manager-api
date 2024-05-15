@@ -2,8 +2,9 @@ import BaseSeeder from "@ioc:Adonis/Lucid/Seeder";
 import MenuItem from "App/Models/MenuItem";
 import Permissao from "App/Models/Permissao";
 
-const permissoesItens = {
+const PermissoesItens = {
   "/usuarios": ["usuarios-listar"],
+  "/usuarios/novo": ["usuarios-criar"],
   "/perfis": ["perfis-listar"],
   "/temas": ["temas-listar"],
   "/temas/novo": ["temas-criar"],
@@ -32,6 +33,16 @@ export default class extends BaseSeeder {
           ativo: true,
           publico: false,
           ordem: 2,
+          parent_id: null,
+        },
+        {
+          label: "Criar usuário",
+          url: "/usuarios/novo",
+          target: "_self",
+          icone: "person_add",
+          ativo: true,
+          publico: false,
+          ordem: 2.1,
           parent_id: null,
         },
         {
@@ -71,24 +82,27 @@ export default class extends BaseSeeder {
 
     await Promise.all(
       itens.map(async (item) => {
-        const slugPermissoes = item.url ? permissoesItens[item.url] : [];
-        if (!slugPermissoes) return;
+        // para cada item, verifica se deve linkar um item pai
+        if (item.url === "/temas/novo") {
+          item.parent_id = itens.find((i) => i.url === "/temas")?.id || null;
+        } else if (item.url === "/usuarios/novo") {
+          item.parent_id = itens.find((i) => i.url === "/usuarios")?.id || null;
+        }
+        if (item.parent_id) await item.save();
 
-        const permissoes = await Permissao.query().whereIn(
-          "slug",
-          slugPermissoes
-        );
+        // depois de salvar o parent_id, verifica se há permissões a serem adicionadas ao item
+        const slugsPermissoes = item.url ? PermissoesItens[item.url] : [];
+        if (!slugsPermissoes) return;
+
+        // busca as permissões pelo slug
+        const permissoes = await Permissao.query().whereIn("slug", slugsPermissoes);
         if (permissoes.length === 0) return;
 
         const idsPermissoes = permissoes.map((p) => p.id);
 
         console.log(`permissões do item ${item.label}:`, idsPermissoes);
+        // sincroniza as permissões sem apagar as já existentes
         await item.related("permissoes").sync(idsPermissoes, false);
-
-        if (item.url === "/temas/novo") {
-          item.parent_id = itens.find((i) => i.url === "/temas")?.id || null;
-          if (item.parent_id) await item.save();
-        }
       })
     );
   }
