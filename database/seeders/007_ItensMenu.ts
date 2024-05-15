@@ -3,12 +3,21 @@ import MenuItem from "App/Models/MenuItem";
 import Permissao from "App/Models/Permissao";
 
 const PermissoesItens = {
-  "/usuarios": ["usuarios-listar"],
-  "/usuarios/novo": ["usuarios-criar"],
-  "/perfis": ["perfis-listar"],
-  "/temas": ["temas-listar"],
-  "/temas/novo": ["temas-criar"],
+  "Configurações": ["usuarios-listar", "perfis-listar", "temas-listar"],
+  "Usuários": ["usuarios-listar"],
+  "Criar usuário": ["usuarios-criar"],
+  "Perfis": ["perfis-listar"],
+  "Temas": ["temas-listar"],
+  "Criar tema": ["temas-criar"],
 };
+
+const RelacoesItens = {
+  "Usuários": "Configurações",
+  "Criar usuário": "Usuários",
+  "Perfis": "Configurações",
+  "Temas": "Configurações",
+  "Criar tema": "Temas",
+}
 
 export default class extends BaseSeeder {
   public async run() {
@@ -23,6 +32,16 @@ export default class extends BaseSeeder {
           ativo: true,
           publico: true,
           ordem: 1,
+          parent_id: null,
+        },
+        {
+          label: "Configurações",
+          url: "",
+          target: "_self",
+          icone: "settings",
+          ativo: true,
+          publico: false,
+          ordem: 101,
           parent_id: null,
         },
         {
@@ -80,18 +99,18 @@ export default class extends BaseSeeder {
 
     console.log("itens de menu:", itens.map((i) => i.url).join(", "));
 
+    // Configuração de permissões e itens pai (parent_id) de cada item
     await Promise.all(
       itens.map(async (item) => {
         // para cada item, verifica se deve linkar um item pai
-        if (item.url === "/temas/novo") {
-          item.parent_id = itens.find((i) => i.url === "/temas")?.id || null;
-        } else if (item.url === "/usuarios/novo") {
-          item.parent_id = itens.find((i) => i.url === "/usuarios")?.id || null;
+        const labelItemPai = RelacoesItens[item.label]
+        if (labelItemPai) {
+          item.parent_id = itens.find((i) => i.label === labelItemPai)?.id || null;
+          if (item.parent_id) await item.save();
         }
-        if (item.parent_id) await item.save();
 
         // depois de salvar o parent_id, verifica se há permissões a serem adicionadas ao item
-        const slugsPermissoes = item.url ? PermissoesItens[item.url] : [];
+        const slugsPermissoes = PermissoesItens[item.label] || [];
         if (!slugsPermissoes) return;
 
         // busca as permissões pelo slug
