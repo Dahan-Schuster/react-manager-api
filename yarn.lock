@@ -83,7 +83,7 @@
   dependencies:
     "@poppinss/utils" "^5.0.0"
 
-"@adonisjs/core@^5.8.0":
+"@adonisjs/core@^5.8.0", "@adonisjs/core@^5.8.6":
   version "5.9.0"
   resolved "https://registry.yarnpkg.com/@adonisjs/core/-/core-5.9.0.tgz#cd5a1ea938a920ff82d9644386c9d53b70b027b8"
   integrity sha512-32zG9EW0t0Ck0cMzlwD0+z3GJG7k/gZz6P0+h+s8N1N7fHxGixrKs7W7lT3OcIvk0NsuIw1tUPAU7fAWytHEqA==
@@ -465,6 +465,14 @@
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/@jsdevtools/ono/-/ono-7.1.3.tgz#9df03bbd7c696a5c58885c34aa06da41c8543796"
   integrity sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==
+
+"@melchyore/adonis-auto-preload@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@melchyore/adonis-auto-preload/-/adonis-auto-preload-1.0.5.tgz#65fe51103ef58a3b47c08bb4e480fbe21adc3297"
+  integrity sha512-eaLXH2jLfIXcTuPD2294GRqkf0MkiCzlEehVyQ90JTyypm648lT8hgWwKFmFUH6duDgmffplpSs6FNIukMq9bA==
+  dependencies:
+    "@adonisjs/core" "^5.8.6"
+    reflect-metadata "^0.1.13"
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -4390,6 +4398,11 @@ redeyed@~2.1.0:
   integrity sha512-FNpGGo1DycYAdnrKFxCMmKYgo/mILAqtRYbkdQD8Ep/Hk2PQ5+aEAEx+IU713RTDmuBaH0c8P5ZozurNu5ObRQ==
   dependencies:
     esprima "~4.0.0"
+
+reflect-metadata@^0.1.13:
+  version "0.1.14"
+  resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.14.tgz#24cf721fe60677146bb77eeb0e1f9dece3d65859"
+  integrity sha512-ZhYeb6nRaXCfhnndflDK8qI6ZQ/YcWZCISRAWICW9XYqMUwjZM9Z0DveWX/ABN01oxSHwVxKQmxeYZSsm0jh5A==
 
 reflect-metadata@^0.2.2:
   version "0.2.2"
