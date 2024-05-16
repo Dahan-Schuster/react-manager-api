@@ -29,7 +29,7 @@ export default class ExceptionHandler extends HttpExceptionHandler {
     super(Logger);
   }
 
-  private getErrorResponses: Map<
+  private ErrorResponsesByCode: Map<
     string,
     (error?: any) => [number, ErrorResponse]
   > = new Map()
@@ -57,7 +57,7 @@ export default class ExceptionHandler extends HttpExceptionHandler {
       { success: false, error: "Registro não encontrado" },
     ])
     .set("ER_NO_REFERENCED_ROW_2", () =>
-      this.getErrorResponses.get("E_ROW_NOT_FOUND")!()
+      this.ErrorResponsesByCode.get("E_ROW_NOT_FOUND")!()
     )
     .set("ER_DUP_ENTRY", () => [
       409,
@@ -81,7 +81,7 @@ export default class ExceptionHandler extends HttpExceptionHandler {
       });
     } else {
       const handler =
-        this.getErrorResponses.get(error.code) || this.defaultHandler;
+        this.ErrorResponsesByCode.get(error.code) || this.defaultHandler;
       const [httpCode, errorResponse] = handler(error);
       return ctx.response.status(httpCode).send(errorResponse);
     }
@@ -112,7 +112,7 @@ export default class ExceptionHandler extends HttpExceptionHandler {
     logger: HttpContextContract["logger"]
   ) {
     const handler =
-      this.getErrorResponses.get(exception.code) || this.defaultHandler;
+      this.ErrorResponsesByCode.get(exception.code) || this.defaultHandler;
     const [httpCode, errorResponse] = handler(exception);
     if (httpCode >= 500) {
       logger.error({ code: httpCode, err: exception }, errorResponse.error);
