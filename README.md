@@ -22,8 +22,11 @@ Um ponto inicial para APIs RESTFUL feito com Nodejs, AdonisJse Lucid. Inclui rot
     - [Temas](#temas)
   - [Desenvolvimento](#desenvolvimento)
     - [Tabelas e models](#tabelas-e-models)
+      - [Auto-Preload](#auto-preload)
     - [Criando módulos e permissões](#criando-módulos-e-permissões)
     - [Controllers e rotas](#controllers-e-rotas)
+      - [Resposta da requisição](#resposta-da-requisição)
+      - [Exemplo de controller](#exemplo-de-controller)
     - [Logs](#logs)
     - [Eventos](#eventos)
     - [Tratamento de erros](#tratamento-de-erros)
@@ -308,6 +311,8 @@ O decorator @column é usado para definir as propriedades do model que represent
   public ativo: boolean;
 ```
 
+#### Auto-Preload
+
 Adicionalmente, este projeto usa a extensão [Adonis Auto-Preload](https://github.com/Melchyore/adonis-auto-preload) para carregar relações de objetos automaticamente.
 
 Caso não esteja familiarizado, leia sobre como definir e carregar relações [aqui](https://v5-docs.adonisjs.com/guides/models/relationships) e [aqui](https://v5-docs.adonisjs.com/guides/models/relationships#preload-relationship).
@@ -448,11 +453,38 @@ Route.group(() => {
 import "./routes/vendas";
 ```
 
-Note que em cada rota é adicionado o middleware `auth`, passando como parâmetro depois do `:` a lista de permissões necessárias para acessar a rota, no formato de string com os slugs separados por vírgulas: `auth:permissao-1,permissao-2,permissao-3`.
+Note que em cada rota é adicionado o middleware `auth`, passando como parâmetro depois do `:` a lista de permissões necessárias para acessar a rota, no formato de string com os slugs separados por vírgulas: `auth:permissao-1,permissao-2,permissao-3`. Note que a lógica usada é OU, ou seja, o usuário deverá ter ao menos UMA das permissões para acessar.
 
 Geralmente apenas uma permissão é passada por rota, mas sinta-se livre para passar quantas precisar para seu caso de uso.
 
 Se não quiser definir permissões para a rota, mas ainda quiser bloquear a mesma para apenas usuários logados, inclua o middleware `auth` sem parâmetros: `.middleware('auth')`.
+
+#### Resposta da requisição
+
+Por padrão, retornamos todas as requisições com um objeto no formato
+
+```json
+{
+  success: boolean;
+  error: string | undefined;
+  objeto: any; // variável a depender do controller
+}
+```
+
+#### Exemplo de controller
+
+```typescript
+export default class GetPerfisController {
+  public async handle({ response, logger }: HttpContextContract) {
+    logger.info('Buscando perfis')
+    const perfis = await Perfil.query().orderBy("nome", "asc");
+    response.send({
+      success: true,
+      perfis,
+    });
+  }
+}
+```
 
 ### Logs
 
