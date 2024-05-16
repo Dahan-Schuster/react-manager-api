@@ -11,11 +11,22 @@ Um ponto inicial para APIs RESTFUL feito com Nodejs, AdonisJse Lucid. Inclui rot
   - [Configurações próprias do projeto](#configurações-próprias-do-projeto)
     - [Módulos e Tipos de permissão do sistema](#módulos-e-tipos-de-permissão-do-sistema)
     - [Seeders](#seeders)
+      - [001\_Modulos](#001_modulos)
+      - [002\_Perfis](#002_perfis)
+      - [003\_TiposPermissao](#003_tipospermissao)
+      - [004\_PermissoesModulos:](#004_permissoesmodulos)
+      - [005\_UsuarioAdmin](#005_usuarioadmin)
+      - [006\_PermissoesAdmin](#006_permissoesadmin)
+      - [007\_ItensMenu](#007_itensmenu)
+      - [Editando os seeders](#editando-os-seeders)
     - [Temas](#temas)
   - [Desenvolvimento](#desenvolvimento)
     - [Tabelas e models](#tabelas-e-models)
     - [Criando módulos e permissões](#criando-módulos-e-permissões)
-    - [Controllers](#controllers)
+    - [Controllers e rotas](#controllers-e-rotas)
+    - [Logs](#logs)
+    - [Eventos](#eventos)
+    - [Tratamento de erros](#tratamento-de-erros)
 
 ## Instalação
 
@@ -86,16 +97,17 @@ Como parte da instalação, é necessário preparar o ambiente de desenvolviment
 
 ## Configurações próprias do projeto
 
-Cada projeto terá sua série de módulos, perfis, tipos de permissões e itens de menu. Os seeder do Projeto Padrão vêm com uma configuração inicial que pode ser usada sem alterações.
+Cada projeto terá sua série de módulos, perfis, tipos de permissões, temas e itens de menu. Os seeders do Projeto Padrão vêm com uma configuração inicial que pode ser usada sem alterações.
 Para executar os seeders, execute o seguinte comando na pasta do projeto:
 
 ```bash
 # irá executar os seeders da pata ./database/seeders em ordem alfabética
+# a opção --interactive pode ser passada para escolher quais seeders executar
 node ace db:seed
 ```
 
 Se o seu projeto possuir necessidades específicas de módulos, perfis, tipos de permissão ou itens de menu, basta alterar os seeders existentes.
-Antes de alterar, é recomendável ler sobre como funcionam cada um desses módulos.
+Antes de alterar, é recomendável ler sobre como funcionam cada um desses módulos na seção abaixo.
 
 ### Módulos e Tipos de permissão do sistema
 
@@ -108,17 +120,21 @@ A tabela permissoes guarda as relações many-to-many entre Módulos e Tipos de 
     Atenção para a coluna slug: toda a verificação de permissões no sistema depende dessa coluna.
     Ela permite identificar a permissão de forma humana rapidamente, e é montada no formato:
     [NOME_MODULO]_[NOME_TIPO_PERMISSAO], sem acentos, letras maiúsculas e espaços.
-    Ex.: usuarios-criar, perfis-listar, deletar-temas
+    Ex.: usuarios-criar, perfis-listar, temas-deletar
 
 A configuração de permissões por módulo é feita no Seeder [004_PermissoesModulos](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/004_PermissoesModulos.ts). Mais sobre isso na sessão [Seeders](#seeders).
 
 A tabela de permissões possui outra coluna extra chamada `permissao_fixada`. Ela é usada para configurar as permissões de usuários e informa se a permissão foi herdada por um perfil (`permissao_fixada = 0`) ou dada diretamente ao usuário (`permissao_fixada = 1`).
 
-Isto impacta a definição de permissões do usuário no momento em que o mesmo troca de perfil (ou quando o perfil tem suas permissões alteradas). Por exemplo, se houver um perfil Gerente com a única permissão de Listar Usuários e um novo usuário for registrado com este perfil, ele irá herdar esta permissão. Caso em algum momento a permissão seja fixada para o usuário (através da tab de permissões do usuário no Projeto Padrão Web, por exemplo), mesmo que o usuário deixe de ter o perfil Gerente a permissão continuará ativa para ele. O mesmo vale para caso a permissão seja removida do perfil, o que impacta todos os usuários associados ao perfil imediatamente, removendo ou adicionando permissões.
+Isto impacta a definição de permissões do usuário no momento em que o mesmo troca de perfil (ou quando o perfil tem suas permissões alteradas). Por exemplo, se houver um perfil Gerente com a única permissão de Listar Usuários e um novo usuário for registrado com este perfil, ele irá herdar esta permissão. Caso em algum momento a permissão seja fixada para o usuário (através da tab de permissões no formulário de usuário no Projeto Padrão Web, por exemplo), mesmo que o usuário deixe de ter o perfil Gerente a permissão continuará ativa para ele. O mesmo vale para caso a permissão seja removida do perfil, o que impacta todos os usuários associados ao perfil imediatamente, removendo ou adicionando permissões.
+
+Esta configuração pode ser deixada transparente a depender do projeto. Se seu projeto não precisa adicionar/remover permissões por usuário, o sistema de perfis será suficiente. Lembre-se apenas de ajustar o frontend, caso use o Projeto Padrão Web, para não mostrar o formulário de permissões do usuário, apenas o select de perfil, e use o formulário de permissões dos perfis.
 
 ### Seeders
 
-O seeder [001_Modulos](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/001_Modulos.ts) salva no banco os seguintes módulos principais do sistema:
+#### [001_Modulos](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/001_Modulos.ts)
+
+Este seeder salva no banco os seguintes módulos principais do sistema:
 
 1. Perfis (CRUD de perfis e alteração de suas permissões)
 2. Usuários (CRUD de usuários, ativação e inativação de conta e alteração de permissões próprias do usuário)
@@ -126,9 +142,14 @@ O seeder [001_Modulos](https://bitbucket.org/padrao-paineis-web-quaestum/api-pro
 4. Itens Menu (CRUD de itens do menu e alteração dos itens ativos)
 5. Logs (listagem de logs)
 
-O seeder [002_Perfis](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/002_Perfis.ts) salva o perfil Admin como padrão.
+#### [002_Perfis](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/002_Perfis.ts)
 
-O seeder [003_TiposPermissao](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/003_TiposPermissao.ts) salva os seguintes tipos básicos:
+Este seeder cria os perfis iniciais do sistema. Atualmente apenas o Admin é criado,
+porém sem permissões pré-definidas.
+
+#### [003_TiposPermissao](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/003_TiposPermissao.ts) 
+
+Este seeder salva os seguintes tipos básicos:
 
 1. Listar
 2. Criar
@@ -137,7 +158,7 @@ O seeder [003_TiposPermissao](https://bitbucket.org/padrao-paineis-web-quaestum/
 5. Alterar status
 6. Alterar Permissão
 
-[004_PermissoesModulos](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/004_PermissoesModulos.ts):
+#### [004_PermissoesModulos](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/004_PermissoesModulos.ts):
 
 Este seeder é responsável por criar as permissões de cada módulo e informar seu Slug e Label.
 
@@ -175,7 +196,13 @@ Por baixo dos panos, tanto o Front quanto o Back estão buscando na lista de per
 
 Por fim, o seeder `004_PermissoesModulos` cadastra uma série de permissões para cada um dos módulos criados no seeder `001_Modulos`
 
-O seeder [005_UsuarioAdmin](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/005_UsuarioAdmin.ts) cria um usuário admin master com email e senha padrões. Este pode ser alterado para o email e senha que preferir:
+A tabela de permissões possui outra coluna extra chamada `permissao_fixada`. Ela é usada para configurar as permissões de usuários e informa se a permissão foi herdada por um perfil (`permissao_fixada = 0`) ou dada diretamente ao usuário (`permissao_fixada = 1`).
+
+Isto impacta a definição de permissões do usuário no momento em que o mesmo troca de perfil (ou quando o perfil tem suas permissões alteradas). Por exemplo, se houver um perfil Gerente com a única permissão de Listar Usuários e um novo usuário for registrado com este perfil, ele irá herdar esta permissão. Caso em algum momento a permissão seja fixada para o usuário (através da tab de permissões do usuário no Projeto Padrão Web, por exemplo), mesmo que o usuário deixe de ter o perfil Gerente a permissão continuará ativa para ele. O mesmo vale para caso a permissão seja removida do perfil, o que impacta todos os usuários associados ao perfil imediatamente, removendo ou adicionando permissões.
+
+#### [005_UsuarioAdmin](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/005_UsuarioAdmin.ts)
+
+Este seeder cria um usuário admin master com email e senha padrões. Este pode ser alterado para o email e senha que preferir:
 
 ```json
 {
@@ -185,14 +212,18 @@ O seeder [005_UsuarioAdmin](https://bitbucket.org/padrao-paineis-web-quaestum/ap
 }
 ```
 
-O seeder [006_PermissoesAdmin](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/006_PermissoesAdmin.ts) dá permissões para todos os módulos cadastrados no seeder `001_Modulos` ao usuário Admin. Note que estas permissões são salvas com a coluna `permissao_fixada = 1`, ou seja, este usuário não precisa de um perfil. As permissões são adicionadas diretamente e permanecerão mesmo que ele seja associado a um perfil.
+#### [006_PermissoesAdmin](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/006_PermissoesAdmin.ts)
+
+Este seeder dá permissões para todos os módulos cadastrados no seeder `001_Modulos` ao usuário Admin. Note que estas permissões são salvas com a coluna `permissao_fixada = 1`, ou seja, este usuário não precisa de um perfil. As permissões são adicionadas diretamente e permanecerão mesmo que ele seja associado a um perfil.
 
     Note que, se você alterou o email do usuário Admin no seeder anterior, deverá ajustar
     neste seeder, pois é pelo email que o usuário é buscado no banco.
 
-Por fim, o seeder [007_ItensMenu](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/007_ItensMenu.ts) cadastra os itens de menu padrão do sistema, configurados com permissões necessárias para poderem ser visualizados no frontend.
+#### [007_ItensMenu](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/007_ItensMenu.ts)
 
----
+Este seeder  cadastra os itens de menu padrão do sistema, configurados com permissões necessárias para poderem ser visualizados no frontend.
+
+#### Editando os seeders
 
 Cada um dos seeders pode ser alterado para atender os requisitos do seu projeto. Para adicionar novos itens à tabela Módulos, Tipos de Permissão etc, basta alterar o seeder e executá-lo separadamente com:
 
@@ -213,7 +244,7 @@ a nomeclatura dos temas na api é "Temas MUI", para diferenciar de eventuais nov
 
 ## Desenvolvimento
 
-Para começar a desenvolver o sistema, vamos primeiro iniciar um servidor de desenvolvimento no terminal:
+Para começar a desenvolver o sistema, certifique-se de ter passado pelos passos da [instalação](#instalação) e prossiga para iniciar um servidor de desenvolvimento no terminal:
 
 ```bash
 # navega para a pasta do projeto
@@ -238,10 +269,22 @@ O fluxo de criação de uma nova tabela e seu model é o seguinte:
 
 ```
 node ace make:migration <NOME TABELA>
+
 node ace make:model <NOME MODEL>
 ```
-
 Na migration você define os campos da tabela, e o model é a representação do objeto no Typescript. Nele você também define as relações entre outros Objetos, com os decorators @hasOne, @hasMany, @manyToMany etc.
+
+Se o nome do model não corresponder ao nome da tabela no singular (ex: tabela usuarios, model Usuario), você pode informar ao Adonis qual o nome da tabela usando a propriedade `table`:
+
+```typescript
+// nesse caso, o adonis buscaria por uma tabela chamada "menu_items", com "m",
+// pois o inglês é usado como padrão
+class MenuItem extends BaseModel {
+  public static table = "menu_itens";
+
+  // ...
+}
+```
 
 Mais informações sobre o ORM [aqui](https://v5-docs.adonisjs.com/guides/models/introduction)
 
@@ -373,7 +416,7 @@ if (permissoes?.length) {
 // ...
 ```
 
-### Controllers
+### Controllers e rotas
 
 Controllers recebem e validam as requisições. Podem realizar uma consulta simples no banco ou chamar métodos com lógica mais complexa no model. Usamos o padrão de [Single Action Controller](https://docs.adonisjs.com/guides/basics/controllers#single-action-controllers), com um único método `handle` por controller, que fará uma única ação.
 
@@ -383,8 +426,106 @@ Para criar um controller, use o comando:
 node ace make:controller NovoController
 ```
 
-Depois adicione a rota à API. Você pode usar um arquivo de rotas existente
+Depois adicione a rota à API. Você pode usar um arquivo de rotas existente em `./start/routes.ts` ou adicionar um novo arquivo na pasta `./start/routes/` e importá-lo no `routes.ts`:
 
-TODO: definição de rotas com permissões.
+```typescript
+// start/routes/vendas.ts
 
-TODO: explicação do CRUD de itens de menu
+import Route from "@ioc:Adonis/Core/Route";
+
+Route.group(() => {
+  Route.get("/", "Vendas/GetVendasController").middleware("auth:vendas-listar");
+  Route.post("/exportar", "Vendas/ExportarVendasController").middleware(
+    "auth:vendas-exportar"
+  );
+}).prefix("vendas");
+```
+
+```typescript
+// start/routes.ts
+
+// ...
+import "./routes/vendas";
+```
+
+Note que em cada rota é adicionado o middleware `auth`, passando como parâmetro depois do `:` a lista de permissões necessárias para acessar a rota, no formato de string com os slugs separados por vírgulas: `auth:permissao-1,permissao-2,permissao-3`.
+
+Geralmente apenas uma permissão é passada por rota, mas sinta-se livre para passar quantas precisar para seu caso de uso.
+
+Se não quiser definir permissões para a rota, mas ainda quiser bloquear a mesma para apenas usuários logados, inclua o middleware `auth` sem parâmetros: `.middleware('auth')`.
+
+### Logs
+
+Mais sobre o logger do AdonisJS [aqui](https://v5-docs.adonisjs.com/guides/logger).
+
+EVITE usar console.log, pois este imprime apenas a mensagem passada. Caso queira deixar logs no servidor para um determinado tipo de ação, use o objeto `logger` incluso no contexto da requisição (ou importe a classe Logger diretamente se não estiver no contexto de requisições).
+
+```typescript
+export default class GetPerfisController {
+  public async handle({ response, logger }: HttpContextContract) {
+    logger.info('Sou uma mensagem de log!')
+    logger.error('Sou uma mensagem de erro!')
+    logger.warn('Sou uma mensagem de aviso!')
+    // ...
+  }
+}
+```
+
+A vantagem disso é ter o horário de cada log e poder diferenciar mensagens de informação, erro, aviso etc. Além disso, a API está configurada para gerar um ID único para cada requisição, então todos os logs feitos usando o objeto logger da mesma requisição terão o `requestId` impresso em conjunto, o que facilita a investigação de erros futuros.
+
+### Eventos
+
+Leia mais sobre a documentação de eventos no AdonisJS [aqui](https://v5-docs.adonisjs.com/guides/events).
+
+Nomes de eventos podem ser registrados no arquivo `./contracts/events.ts` na interface `EventsList`. As chaves dessa interface definem quais eventos podem ser lançados e escutados, enquanto o valor de cada chave informa o tipo esperado de dados que devem ser recebidos pelo listener desse evento.
+
+Novos listeners devem ser registrados no arquivo `./start/events.ts`, semelhante a como é feito no arquivo de rotas. Neste arquivo definem-se os listeners de cada tipo de evento.
+
+Para criar um novo listener, use o comando:
+
+```bash
+node ace make:listener NovoListener
+```
+
+No arquivo criado, é possível definir vários métodos. Esse métodos são associados ao evento no arquivo de `./start/events.ts` no formato `Event.on("new:evento", "NovoListener.metodo");`. Cada um deve receber como parâmetro o tipo informato em `./contracts/events.ts`
+
+Um caso de uso comum para eventos é o salvamento de logs no banco de dados. Como os eventos do Adonis são assíncronos, a requisição não fica travada esperando todos os listeners terminarem. Para salvar um log no banco, basta usar a tabela DatabaseLog:
+
+```typescript
+// app/Listeners/User.ts
+
+import type { EventsList } from "@ioc:Adonis/Core/Event";
+import DatabaseLog from "App/Models/DatabaseLog";
+
+export default class User {
+  public async onNewUser({
+    user,
+    origem,
+    observacoes,
+    ctx,
+  }: EventsList["new:user"]) {
+    ctx.logger.info(`Novo usuário criado: #${user.id} - ${user.email}`);
+    const databaseLog = new DatabaseLog();
+
+    const requestId = ctx.request.header("x-request-id");
+
+    databaseLog
+      .fill({
+        operacao: "new",
+        modulo: "user",
+        origem,
+        dados: JSON.stringify(user),
+        user_id: ctx.auth?.user?.id,
+        observacoes,
+        request_id: requestId,
+      })
+      .save();
+  }
+}
+```
+
+### Tratamento de erros
+
+Saiba mais sobre tratamento de erros no AdonisJS [aqui](https://v5-docs.adonisjs.com/guides/exception-handling#handling-exceptions-globally)
+
+A classe `app/Exceptions/Handler` é responsável por tratar as exeções lançadas globalmente pela API. Por isso, não use try-catch a menos que queira capturar erros específicos do seu caso de uso. Nos demais casos, deixe que a operação lance erros sem capturá-los. É possível adicionar códigos de erros conhecidos no objeto `ErrorResponsesByCode` definido dentro da classe (ex: 'E_ROUTE_NOT_FOUND', 'E_VALIDATION_FAILURE'). Verifique a classe para saber mais como os erros são formatados e enviados de volta para a requisição.
