@@ -17,6 +17,7 @@ import ApiError from "App/Exceptions/ApiError";
 import { DateTime } from "luxon";
 import Perfil from "./Perfil";
 import Permissao from "./Permissao";
+import { computed } from "@ioc:Adonis/Lucid/Orm";
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -24,6 +25,11 @@ export default class User extends BaseModel {
 
   @column()
   public nome: string;
+
+  @computed()
+  public get primeiroNome() {
+    return this.nome.split(" ")[0];
+  }
 
   @column()
   public status: number;
@@ -89,10 +95,7 @@ export default class User extends BaseModel {
       const userWithEmail = await query.first();
 
       if (userWithEmail) {
-        throw new ApiError(
-          "Este e-mail já está sendo utilizado por outro usuário",
-          400
-        );
+        throw new ApiError("Este e-mail já está sendo utilizado por outro usuário", 400);
       }
     }
   }
@@ -114,9 +117,7 @@ export default class User extends BaseModel {
         ?.related("permissoes")
         .query()
         .select("id");
-      const idsPermissoesPerfilOriginal = permissoesPerfilOriginal?.map(
-        (p) => p.id
-      );
+      const idsPermissoesPerfilOriginal = permissoesPerfilOriginal?.map((p) => p.id);
 
       // filtra as permissões do usuário que foram herdadas pelo perfil (não fixadas)
       const permissoesPerfilUsuario = await user
@@ -125,9 +126,7 @@ export default class User extends BaseModel {
         .whereInPivot("permissao_id", idsPermissoesPerfilOriginal)
         .andWherePivot("permissao_fixada", 0)
         .select("id");
-      const idsPermissoesPerfilUsuario = permissoesPerfilUsuario?.map(
-        (p) => p.id
-      );
+      const idsPermissoesPerfilUsuario = permissoesPerfilUsuario?.map((p) => p.id);
 
       // remove as permissões herdadas pelo perfil antigo, se houverem
       if (idsPermissoesPerfilUsuario?.length) {
@@ -149,10 +148,7 @@ export default class User extends BaseModel {
     if (!perfil) return;
 
     // busca as permissões do novo perfil
-    const permissoesNovoPerfil = await perfil
-      .related("permissoes")
-      .query()
-      .select("id");
+    const permissoesNovoPerfil = await perfil.related("permissoes").query().select("id");
     const idsPermissoesNovoPerfil = permissoesNovoPerfil?.map((p) => p.id);
 
     // busca as permissões do perfil que já foram fixadas no usuário
