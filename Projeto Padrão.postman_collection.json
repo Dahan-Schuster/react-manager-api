@@ -4,7 +4,7 @@
 		"name": "Projeto Padrão",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "17051936",
-		"_collection_link": "https://lunar-resonance-892013.postman.co/workspace/Quaestum-Workspace~c2ef2f6b-5ec1-40a6-8327-2afe6b733f26/collection/17051936-5e6052a6-5be3-41a4-8886-609aedd4391d?action=share&source=collection_link&creator=17051936"
+		"_collection_link": "https://quaestum-6809.postman.co/workspace/Quaestum-Workspace~c2ef2f6b-5ec1-40a6-8327-2afe6b733f26/collection/17051936-5e6052a6-5be3-41a4-8886-609aedd4391d?action=share&source=collection_link&creator=17051936"
 	},
 	"item": [
 		{
@@ -547,7 +547,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nome\": \"Teste\",\n    \"permissoes\": [ 1, 2, 3, 4 ]\n}",
+							"raw": "{\n    \"nome\": \"Teste\"\n    //\"permissoes\": [ 1, 2, 3, 4 ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -584,7 +584,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"_nome\": \"Teste\",\n    \"permissoes\": [1],\n    \"_permissoes\": []\n}",
+							"raw": "{\n    \"nome\": \"Operador UT\",\n    \"permissoes\": [],\n    \"_permissoes\": []\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -603,7 +603,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "4"
+									"value": "2"
 								}
 							]
 						}
@@ -741,228 +741,6 @@
 			"name": "sistema",
 			"item": [
 				{
-					"name": "paletas de cores",
-					"item": [
-						{
-							"name": "create",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{token}}",
-										"type": "text"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"nome\": \"Rosa\",\n    \"main\": \"#f50057\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{BASE_URI}}/sistema/paletas",
-									"host": [
-										"{{BASE_URI}}"
-									],
-									"path": [
-										"sistema",
-										"paletas"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "update",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{token}}",
-										"type": "text"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"nome\": \"Preto\",\n    \"contrastText\": \"#ffffff\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{BASE_URI}}/sistema/paletas/:id",
-									"host": [
-										"{{BASE_URI}}"
-									],
-									"path": [
-										"sistema",
-										"paletas",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "delete",
-							"request": {
-								"method": "DELETE",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{token}}",
-										"type": "text"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{BASE_URI}}/sistema/paletas/:id",
-									"host": [
-										"{{BASE_URI}}"
-									],
-									"path": [
-										"sistema",
-										"paletas",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "2"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "get all",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{token}}",
-										"type": "text"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{BASE_URI}}/sistema/paletas",
-									"host": [
-										"{{BASE_URI}}"
-									],
-									"path": [
-										"sistema",
-										"paletas"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "show one",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{token}}",
-										"type": "text"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{BASE_URI}}/sistema/paletas/:id",
-									"host": [
-										"{{BASE_URI}}"
-									],
-									"path": [
-										"sistema",
-										"paletas",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
 					"name": "itens menu",
 					"item": [
 						{
@@ -983,7 +761,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"label\": \"Teste Filho\",\n    \"url\": \"/a/b\",\n    //\"icone\": \"\",\n    \"parent_id\": 2,\n    \"permissoes\": [4]\n}",
+									"raw": "{\n    \"label\": \"Temas\",\n    \"url\": \"/temas\",\n    \"icone\": \"palette\",\n    //\"parent_id\": 2,\n    \"permissoes\": [12]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1184,6 +962,52 @@
 					]
 				},
 				{
+					"name": "logs",
+					"item": [
+						{
+							"name": "get all",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/sistema/logs",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"sistema",
+										"logs"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "imagens",
 					"item": [
 						{
@@ -1368,80 +1192,6 @@
 					"name": "temas mui",
 					"item": [
 						{
-							"name": "create",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{token}}",
-										"type": "text"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "nome",
-											"value": "Principal Claro 2",
-											"type": "text"
-										},
-										{
-											"key": "muiMode",
-											"value": "light",
-											"type": "text"
-										},
-										{
-											"key": "fileFavicon",
-											"type": "file",
-											"src": "/C:/Users/dahan/Pictures/Dummies/favicon.ico"
-										},
-										{
-											"key": "fileLogoHeader",
-											"type": "file",
-											"src": "/C:/Users/dahan/Pictures/Dummies/Projeto Padrão.png"
-										},
-										{
-											"key": "fileLogoLogin",
-											"type": "file",
-											"src": "/C:/Users/dahan/Pictures/Dummies/pp.png"
-										},
-										{
-											"key": "primary",
-											"value": "4",
-											"type": "text"
-										},
-										{
-											"key": "secondary",
-											"value": "5",
-											"type": "text"
-										},
-										{
-											"key": "ativo",
-											"value": "1",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{BASE_URI}}/sistema/temas-mui",
-									"host": [
-										"{{BASE_URI}}"
-									],
-									"path": [
-										"sistema",
-										"temas-mui"
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "update",
 							"request": {
 								"method": "PUT",
@@ -1467,60 +1217,180 @@
 											"disabled": true
 										},
 										{
-											"key": "muiMode",
+											"key": "mui_mode",
 											"value": "dark",
 											"type": "text",
 											"disabled": true
 										},
 										{
-											"key": "fileFavicon",
+											"key": "file_favicon",
 											"type": "file",
-											"src": "/C:/Users/dahan/Pictures/Dummies/favicon.ico",
+											"src": "/C:/Users/Indira Lima/Pictures/Dummies/favicon.ico",
 											"disabled": true
 										},
 										{
-											"key": "fileLogoHeader",
+											"key": "file_logo_header",
 											"type": "file",
-											"src": "/C:/Users/dahan/Pictures/Dummies/Projeto Padrão.png",
+											"src": "/C:/Users/Indira Lima/Pictures/Dummies/Projeto Padrão.png",
 											"disabled": true
 										},
 										{
-											"key": "fileLogoLogin",
+											"key": "file_logo_login",
 											"type": "file",
 											"src": "/C:/Users/dahan/Pictures/Dummies/pp.png",
 											"disabled": true
 										},
 										{
-											"key": "primary",
-											"value": "2",
-											"type": "text",
-											"disabled": true
-										},
-										{
-											"key": "secondary",
-											"value": "3",
-											"type": "text",
-											"disabled": true
-										},
-										{
 											"key": "id",
-											"value": "8",
+											"value": "1",
 											"type": "text"
 										},
 										{
-											"key": "backgroundDefault",
-											"value": "#ffffff",
-											"type": "text"
-										},
-										{
-											"key": "backgroundPaper",
+											"key": "background_default",
 											"value": "#f0f0f0",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "background_paper",
+											"value": "#ffffff",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "text_primary",
+											"value": "#333333",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "cores_paleta",
+											"value": "{\"primary\": {\"main\": \"#7924a0\"}, \"secondary\": {\"main\": \"#d4a325\"}}",
 											"type": "text"
 										},
 										{
-											"key": "textPrimary",
+											"key": "cor_header",
+											"value": "#ff0000",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "cor_menu",
+											"value": "#00ffff",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "cor_texto_menu",
+											"value": "#ffffff",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/sistema/temas-mui",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"sistema",
+										"temas-mui"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "nome",
+											"value": "Principal Escuro",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "mui_mode",
+											"value": "dark",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "file_favicon",
+											"type": "file",
+											"src": "/C:/Users/Indira Lima/Pictures/Dummies/favicon.ico",
+											"disabled": true
+										},
+										{
+											"key": "file_logo_header",
+											"type": "file",
+											"src": "/C:/Users/Indira Lima/Pictures/Dummies/Projeto Padrão.png",
+											"disabled": true
+										},
+										{
+											"key": "file_logo_login",
+											"type": "file",
+											"src": "/C:/Users/dahan/Pictures/Dummies/pp.png",
+											"disabled": true
+										},
+										{
+											"key": "background_default",
+											"value": "#f0f0f0",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "background_paper",
+											"value": "#ffffff",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "text_primary",
 											"value": "#333333",
-											"type": "text"
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "cores_paleta",
+											"value": "{\"primary\": {\"main\": \"#7924a0\"}, \"secondary\": {\"main\": \"#d4a325\"}}",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "cor_header",
+											"value": "#ff0000",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "cor_menu",
+											"value": "#00ffff",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "cor_texto_menu",
+											"value": "#ffffff",
+											"type": "text",
+											"disabled": true
 										}
 									]
 								},
@@ -1670,6 +1540,54 @@
 							"response": []
 						},
 						{
+							"name": "show one",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URI}}/sistema/temas-mui/:id",
+									"host": [
+										"{{BASE_URI}}"
+									],
+									"path": [
+										"sistema",
+										"temas-mui",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "ativo light",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
@@ -1801,51 +1719,6 @@
 									"key": "page",
 									"value": "1",
 									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "update tipos permissão",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"tiposPermissoes\": [\n        {\n            \"tipoId\": 1\n        },\n        {\n            \"tipoId\": 2\n        }\n    ]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URI}}/modulo/:id/tiposPermissoes",
-							"host": [
-								"{{BASE_URI}}"
-							],
-							"path": [
-								"modulo",
-								":id",
-								"tiposPermissoes"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
 								}
 							]
 						}
