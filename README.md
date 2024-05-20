@@ -38,16 +38,17 @@ Para usar o template, clone o projeto e a remote primária:
 ```bash
   # aqui você pode passar o nome da pasta que desejar, para atender sua necessidade
   git clone git@bitbucket.org:padrao-paineis-web-quaestum/api-projeto.git
+  cd api-projeto
   git remote remove origin
 ```
 
-Isso irá clonar o projeto na branch principal, e depois remover a remote origin para poder adicionar a URL do seu repositório:
+Isso irá clonar o projeto na branch principal, e depois remover a remote origin para poder adicionar a URL do seu repositório.
 
 **ATENÇÃO:** Dê preferência a criar o repositório sem commits automáticos (como arquivos .gitignore ou READMEs) que são criados junto do repositório. Isso irá descomplicar o passo de fazer push dos commits do projeto padrão no
 
+Depois adicione a URL do seu repositório como origin:
+
 ```bash
-  cd api-projeto
-  git init
   git remote add origin <URL_REPOSITORIO_API_SEU_PROJETO>
   git push origin main
 ```
