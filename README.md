@@ -33,21 +33,21 @@ Um ponto inicial para APIs RESTFUL feito com Nodejs, AdonisJse Lucid. Inclui rot
 
 ## Instalação
 
-Para usar o template, clone o projeto e apague o histórico GIT:
+Para usar o template, clone o projeto e a remote primária:
 
 ```bash
   # aqui você pode passar o nome da pasta que desejar, para atender sua necessidade
-  git clone --depth=1 git@bitbucket.org:padrao-paineis-web-quaestum/api-projeto.git
-  rm -rf api-projeto/.git
+  git clone git@bitbucket.org:padrao-paineis-web-quaestum/api-projeto.git
+  git remote remove origin
 ```
 
-Isso irá clonar o projeto na branch principal, e depois remover a pasta .git para permitir inicializar um novo repositório para o seu projeto:
+Isso irá clonar o projeto na branch principal, e depois remover a remote origin para poder adicionar a URL do seu repositório:
+
+**ATENÇÃO:** Dê preferência a criar o repositório sem commits automáticos (como arquivos .gitignore ou READMEs) que são criados junto do repositório. Isso irá descomplicar o passo de fazer push dos commits do projeto padrão no
 
 ```bash
   cd api-projeto
   git init
-  git add .
-  git commit -m "Primeiro commit"
   git remote add origin <URL_REPOSITORIO_API_SEU_PROJETO>
   git push origin main
 ```
