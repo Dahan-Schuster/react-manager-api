@@ -7,10 +7,7 @@ export default class DatabaseLog extends BaseModel {
   public id: number;
 
   @column()
-  public modulo: string;
-
-  @column()
-  public operacao: string;
+  public evento: string;
 
   @column()
   public origem: string;
