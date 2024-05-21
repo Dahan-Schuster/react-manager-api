@@ -1,8 +1,12 @@
 import { DateTime } from "luxon";
 import { BaseModel, BelongsTo, belongsTo, column } from "@ioc:Adonis/Lucid/Orm";
 import User from "./User";
+import { AutoPreload } from "@ioc:Adonis/Addons/AutoPreload";
+import { compose } from "@ioc:Adonis/Core/Helpers";
 
-export default class DatabaseLog extends BaseModel {
+export default class DatabaseLog extends compose(BaseModel, AutoPreload) {
+  public static $with = ["user"] as const;
+
   @column({ isPrimary: true })
   public id: number;
 
@@ -32,9 +36,13 @@ export default class DatabaseLog extends BaseModel {
   public dados: string | null;
 
   @column()
-  public user_id: number | null;
+  public userId: number | null;
 
-  @belongsTo(() => User)
+  @belongsTo(() => User, {
+    onQuery: (query) => {
+      query.select("id", "nome");
+    },
+  })
   public user: BelongsTo<typeof User>;
 
   @column.dateTime({ autoCreate: true })

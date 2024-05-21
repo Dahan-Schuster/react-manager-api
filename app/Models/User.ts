@@ -2,6 +2,7 @@ import Hash from "@ioc:Adonis/Core/Hash";
 import {
   BaseModel,
   BelongsTo,
+  HasMany,
   HasOne,
   ManyToMany,
   afterCreate,
@@ -9,6 +10,7 @@ import {
   beforeUpdate,
   belongsTo,
   column,
+  hasMany,
   hasOne,
   manyToMany,
   scope,
@@ -18,6 +20,7 @@ import { DateTime } from "luxon";
 import Perfil from "./Perfil";
 import Permissao from "./Permissao";
 import { computed } from "@ioc:Adonis/Lucid/Orm";
+import DatabaseLog from "./DatabaseLog";
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -78,6 +81,9 @@ export default class User extends BaseModel {
     },
   })
   public permissoes: ManyToMany<typeof Permissao>;
+
+  @hasMany(() => DatabaseLog)
+  public logs: HasMany<typeof DatabaseLog>;
 
   @beforeSave()
   public static async beforeSave(user: User) {

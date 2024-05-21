@@ -13,7 +13,7 @@ export default class User {
         evento: "Criação de Usuário",
         origem,
         dados: JSON.stringify(user),
-        user_id: ctx.auth?.user?.id,
+        userId: ctx.auth?.user?.id,
         observacoes,
         request_id: requestId,
       })
