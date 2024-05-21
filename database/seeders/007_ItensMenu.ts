@@ -3,21 +3,23 @@ import MenuItem from "App/Models/MenuItem";
 import Permissao from "App/Models/Permissao";
 
 const PermissoesItens = {
-  "Configurações": ["usuarios-listar", "perfis-listar", "temas-listar"],
-  "Usuários": ["usuarios-listar"],
+  Configurações: ["usuarios-listar", "perfis-listar", "temas-listar"],
+  Usuários: ["usuarios-listar"],
   "Criar usuário": ["usuarios-criar"],
-  "Perfis": ["perfis-listar"],
-  "Temas": ["temas-listar"],
+  Perfis: ["perfis-listar"],
+  Temas: ["temas-listar"],
   "Criar tema": ["temas-criar"],
+  Logs: ["logs-listar"],
 };
 
 const RelacoesItens = {
-  "Usuários": "Configurações",
+  Usuários: "Configurações",
   "Criar usuário": "Usuários",
-  "Perfis": "Configurações",
-  "Temas": "Configurações",
+  Perfis: "Configurações",
+  Temas: "Configurações",
   "Criar tema": "Temas",
-}
+  Logs: "Configurações",
+};
 
 export default class extends BaseSeeder {
   public async run() {
@@ -94,6 +96,16 @@ export default class extends BaseSeeder {
           ordem: 4.1,
           parent_id: null,
         },
+        {
+          label: "Logs",
+          url: "/logs",
+          target: "_self",
+          icone: "list",
+          ativo: true,
+          publico: false,
+          ordem: 5,
+          parent_id: null,
+        },
       ]
     );
 
@@ -103,7 +115,7 @@ export default class extends BaseSeeder {
     await Promise.all(
       itens.map(async (item) => {
         // para cada item, verifica se deve linkar um item pai
-        const labelItemPai = RelacoesItens[item.label]
+        const labelItemPai = RelacoesItens[item.label];
         if (labelItemPai) {
           item.parent_id = itens.find((i) => i.label === labelItemPai)?.id || null;
           if (item.parent_id) await item.save();
