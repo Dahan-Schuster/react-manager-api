@@ -21,8 +21,12 @@ import Perfil from "./Perfil";
 import Permissao from "./Permissao";
 import { computed } from "@ioc:Adonis/Lucid/Orm";
 import DatabaseLog from "./DatabaseLog";
+import { AutoPreload } from "@ioc:Adonis/Addons/AutoPreload";
+import { compose } from "@ioc:Adonis/Core/Helpers";
 
-export default class User extends BaseModel {
+export default class User extends compose(BaseModel, AutoPreload) {
+  public static $with = ["perfil"] as const;
+
   @column({ isPrimary: true })
   public id: number;
 
