@@ -11,13 +11,13 @@ Um ponto inicial para APIs RESTFUL feito com Nodejs, AdonisJse Lucid. Inclui rot
   - [Configurações próprias do projeto](#configurações-próprias-do-projeto)
     - [Módulos e Tipos de permissão do sistema](#módulos-e-tipos-de-permissão-do-sistema)
     - [Seeders](#seeders)
-      - [001\_Modulos](#001_modulos)
-      - [002\_Perfis](#002_perfis)
-      - [003\_TiposPermissao](#003_tipospermissao)
-      - [004\_PermissoesModulos:](#004_permissoesmodulos)
-      - [005\_UsuarioAdmin](#005_usuarioadmin)
-      - [006\_PermissoesAdmin](#006_permissoesadmin)
-      - [007\_ItensMenu](#007_itensmenu)
+      - [001_Modulos](#001_modulos)
+      - [002_Perfis](#002_perfis)
+      - [003_TiposPermissao](#003_tipospermissao)
+      - [004_PermissoesModulos:](#004_permissoesmodulos)
+      - [005_UsuarioAdmin](#005_usuarioadmin)
+      - [006_PermissoesAdmin](#006_permissoesadmin)
+      - [007_ItensMenu](#007_itensmenu)
       - [Editando os seeders](#editando-os-seeders)
     - [Temas](#temas)
   - [Desenvolvimento](#desenvolvimento)
@@ -151,7 +151,7 @@ Este seeder salva no banco os seguintes módulos principais do sistema:
 Este seeder cria os perfis iniciais do sistema. Atualmente apenas o Admin é criado,
 porém sem permissões pré-definidas.
 
-#### [003_TiposPermissao](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/003_TiposPermissao.ts) 
+#### [003_TiposPermissao](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/003_TiposPermissao.ts)
 
 Este seeder salva os seguintes tipos básicos:
 
@@ -210,9 +210,9 @@ Este seeder cria um usuário admin master com email e senha padrões. Este pode 
 
 ```json
 {
-  nome: "Admin",
-  email: "admin@teste.com.br",
-  password: "padrao@123",
+  "nome": "Admin",
+  "email": "admin@teste.com.br",
+  "password": "padrao@123"
 }
 ```
 
@@ -225,7 +225,7 @@ Este seeder dá permissões para todos os módulos cadastrados no seeder `001_Mo
 
 #### [007_ItensMenu](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/007_ItensMenu.ts)
 
-Este seeder  cadastra os itens de menu padrão do sistema, configurados com permissões necessárias para poderem ser visualizados no frontend.
+Este seeder cadastra os itens de menu padrão do sistema, configurados com permissões necessárias para poderem ser visualizados no frontend.
 
 #### Editando os seeders
 
@@ -276,6 +276,7 @@ node ace make:migration <NOME TABELA>
 
 node ace make:model <NOME MODEL>
 ```
+
 Na migration você define os campos da tabela, e o model é a representação do objeto no Typescript. Nele você também define as relações entre outros Objetos, com os decorators @hasOne, @hasMany, @manyToMany etc.
 
 Se o nome do model não corresponder ao nome da tabela no singular (ex: tabela usuarios, model Usuario), você pode informar ao Adonis qual o nome da tabela usando a propriedade `table`:
@@ -345,7 +346,7 @@ Mais opções de autocarregamento podem ser vistas na página da extensão.
 
 ### Criando módulos e permissões
 
-Geralmente, uma nova tabela estará relacionada a um módulo do sistema, que conterá 
+Geralmente, uma nova tabela estará relacionada a um módulo do sistema, que conterá
 permissões de acesso, como é o caso das tabelas users, perfis e temas_mui_sistema.
 
 Nesse caso, basta adicionar o nome do módulo no seeder 001_Modulos:
@@ -354,9 +355,10 @@ Nesse caso, basta adicionar o nome do módulo no seeder 001_Modulos:
 await Modulo.fetchOrCreateMany("nome", [
   { nome: "Perfis" },
   // ...
-  { nome: "Vendas" } // adicionar
+  { nome: "Vendas" }, // adicionar
 ]);
 ```
+
 Caso precise de tipos de permissão específicos para uma ação, como por exemplo exportar arquivos, crie o tipo no seeder 003_TiposPermissao:
 
 ```typescript
@@ -385,8 +387,7 @@ e configurar quais tipos de permissão existem para esse módulo no seeder 004_P
   },
 ```
 
-
-Ao fazer isso, será possível limitar o acesso a esse módulo usando as permissões 
+Ao fazer isso, será possível limitar o acesso a esse módulo usando as permissões
 criadas, tanto no controller quanto nos frontends, pois o controller de login retorna um array de permissões do usuário no formato:
 
 ```json
@@ -441,9 +442,7 @@ import Route from "@ioc:Adonis/Core/Route";
 
 Route.group(() => {
   Route.get("/", "Vendas/GetVendasController").middleware("auth:vendas-listar");
-  Route.post("/exportar", "Vendas/ExportarVendasController").middleware(
-    "auth:vendas-exportar"
-  );
+  Route.post("/exportar", "Vendas/ExportarVendasController").middleware("auth:vendas-exportar");
 }).prefix("vendas");
 ```
 
@@ -477,7 +476,7 @@ Por padrão, retornamos todas as requisições com um objeto no formato
 ```typescript
 export default class GetPerfisController {
   public async handle({ response, logger }: HttpContextContract) {
-    logger.info('Buscando perfis')
+    logger.info("Buscando perfis");
     const perfis = await Perfil.query().orderBy("nome", "asc");
     response.send({
       success: true,
@@ -496,9 +495,9 @@ EVITE usar console.log, pois este imprime apenas a mensagem passada. Caso queira
 ```typescript
 export default class GetPerfisController {
   public async handle({ response, logger }: HttpContextContract) {
-    logger.info('Sou uma mensagem de log!')
-    logger.error('Sou uma mensagem de erro!')
-    logger.warn('Sou uma mensagem de aviso!')
+    logger.info("Sou uma mensagem de log!");
+    logger.error("Sou uma mensagem de erro!");
+    logger.warn("Sou uma mensagem de aviso!");
     // ...
   }
 }
@@ -531,12 +530,7 @@ import type { EventsList } from "@ioc:Adonis/Core/Event";
 import DatabaseLog from "App/Models/DatabaseLog";
 
 export default class User {
-  public async onNewUser({
-    user,
-    origem,
-    observacoes,
-    ctx,
-  }: EventsList["new:user"]) {
+  public async onNewUser({ user, origem, observacoes, ctx }: EventsList["new:user"]) {
     ctx.logger.info(`Novo usuário criado: #${user.id} - ${user.email}`);
     const databaseLog = new DatabaseLog();
 
@@ -562,3 +556,4 @@ export default class User {
 Saiba mais sobre tratamento de erros no AdonisJS [aqui](https://v5-docs.adonisjs.com/guides/exception-handling#handling-exceptions-globally)
 
 A classe `app/Exceptions/Handler` é responsável por tratar as exeções lançadas globalmente pela API. Por isso, não use try-catch a menos que queira capturar erros específicos do seu caso de uso. Nos demais casos, deixe que a operação lance erros sem capturá-los. É possível adicionar códigos de erros conhecidos no objeto `ErrorResponsesByCode` definido dentro da classe (ex: 'E_ROUTE_NOT_FOUND', 'E_VALIDATION_FAILURE'). Verifique a classe para saber mais como os erros são formatados e enviados de volta para a requisição.
+
