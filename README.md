@@ -68,7 +68,7 @@ Remotes são URLs para repositórios de onde se pode fazer `pull` ou `push` do c
 
     Cuidado! A depender do quão diferente estiver o seu projeto do Projeto Padrão, fazer
     um pull da remote "padrao" pode gerar conflitos. É recomendável mover para uma nova
-    branch antes de fazer o pull, e usar a opção --rebase
+    branch antes de fazer o pull, e NÃO usar a opção --rebase
 
 ### Preparação do ambiente
 
