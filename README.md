@@ -37,7 +37,7 @@ Para usar o template, clone o projeto e a remote primária:
 
 ```bash
   # aqui você pode passar o nome da pasta que desejar, para atender sua necessidade
-  git clone git@bitbucket.org:padrao-paineis-web-quaestum/api-projeto.git
+  git clone git@bitbucket.org:manservquaestum/api-padrao.git
   cd api-projeto
   git remote remove origin
 ```
@@ -57,7 +57,7 @@ Opcionalmente, você pode adicionar o repositório do Projeto Padrão como uma r
 
 ```bash
   # isso irá adicionar a remote de nome "padrao":
-  git remote add padrao git@bitbucket.org:padrao-paineis-web-quaestum/api-projeto.git
+  git remote add padrao git@bitbucket.org:manservquaestum/api-padrao.git
 
   # para usá-la, basta usar "padrao" ao invés de "origin" ao fazer pull:
   git pull padrao main
@@ -97,7 +97,7 @@ Como parte da instalação, é necessário preparar o ambiente de desenvolviment
   node ace migration:run
 ```
 
-4. Opcionalmente, você pode importar os arquivos Postman inclusos na raiz do projeto. Eles contém as variáveis de ambiente e as requisições necessárias para testar cada rota da API sem a necessidade de usar a interface do Frontend. Geralmente novas rotas são testadas no Postman antes de serem inclusas, então verifique por alterações nesses arquivos: [Projeto Padrão.postman_collection.json](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/Projeto%20Padrão.postman_collection.json) e [Projeto Padrão DEV.postman_environment.json](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/Projeto%20Padrão%20DEV.postman_environment.json)
+4. Opcionalmente, você pode importar os arquivos Postman inclusos na raiz do projeto. Eles contém as variáveis de ambiente e as requisições necessárias para testar cada rota da API sem a necessidade de usar a interface do Frontend. Geralmente novas rotas são testadas no Postman antes de serem inclusas, então verifique por alterações nesses arquivos: Projeto Padrão.postman_collection.json e Projeto Padrão DEV.postman_environment.json
 
 ## Configurações próprias do projeto
 
@@ -126,7 +126,7 @@ A tabela permissoes guarda as relações many-to-many entre Módulos e Tipos de 
     [NOME_MODULO]_[NOME_TIPO_PERMISSAO], sem acentos, letras maiúsculas e espaços.
     Ex.: usuarios-criar, perfis-listar, temas-deletar
 
-A configuração de permissões por módulo é feita no Seeder [004_PermissoesModulos](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/004_PermissoesModulos.ts). Mais sobre isso na sessão [Seeders](#seeders).
+A configuração de permissões por módulo é feita no Seeder 004_PermissoesModulos. Mais sobre isso na sessão [Seeders](#seeders).
 
 A tabela de permissões possui outra coluna extra chamada `permissao_fixada`. Ela é usada para configurar as permissões de usuários e informa se a permissão foi herdada por um perfil (`permissao_fixada = 0`) ou dada diretamente ao usuário (`permissao_fixada = 1`).
 
@@ -136,7 +136,7 @@ Esta configuração pode ser deixada transparente a depender do projeto. Se seu 
 
 ### Seeders
 
-#### [001_Modulos](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/001_Modulos.ts)
+#### 001_Modulos
 
 Este seeder salva no banco os seguintes módulos principais do sistema:
 
@@ -146,12 +146,12 @@ Este seeder salva no banco os seguintes módulos principais do sistema:
 4. Itens Menu (CRUD de itens do menu e alteração dos itens ativos)
 5. Logs (listagem de logs)
 
-#### [002_Perfis](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/002_Perfis.ts)
+#### 002_Perfis
 
 Este seeder cria os perfis iniciais do sistema. Atualmente apenas o Admin é criado,
 porém sem permissões pré-definidas.
 
-#### [003_TiposPermissao](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/003_TiposPermissao.ts)
+#### 003_TiposPermissao
 
 Este seeder salva os seguintes tipos básicos:
 
@@ -162,7 +162,7 @@ Este seeder salva os seguintes tipos básicos:
 5. Alterar status
 6. Alterar Permissão
 
-#### [004_PermissoesModulos](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/004_PermissoesModulos.ts):
+#### 004_PermissoesModulos:
 
 Este seeder é responsável por criar as permissões de cada módulo e informar seu Slug e Label.
 
@@ -185,7 +185,7 @@ Por exemplo, ao configurar a seguinte permissão:
 Route.get("/", "Perfis/GetPerfisController").middleware("auth:perfis-listar");
 ```
 
-e verificar pela permissão no frontend usando o método `has` do hook `useUserPermissions` incluso no [Projeto Padrão Web](https://bitbucket.org/padrao-paineis-web-quaestum/front-projeto/src/main/):
+e verificar pela permissão no frontend usando o método `has` do hook `useUserPermissions` incluso no [Projeto Padrão Web](git@bitbucket.org:manservquaestum/front-padrao.git):
 
 ```jsx
 const { has } = useUserPermissions();
@@ -204,7 +204,7 @@ A tabela de permissões possui outra coluna extra chamada `permissao_fixada`. El
 
 Isto impacta a definição de permissões do usuário no momento em que o mesmo troca de perfil (ou quando o perfil tem suas permissões alteradas). Por exemplo, se houver um perfil Gerente com a única permissão de Listar Usuários e um novo usuário for registrado com este perfil, ele irá herdar esta permissão. Caso em algum momento a permissão seja fixada para o usuário (através da tab de permissões do usuário no Projeto Padrão Web, por exemplo), mesmo que o usuário deixe de ter o perfil Gerente a permissão continuará ativa para ele. O mesmo vale para caso a permissão seja removida do perfil, o que impacta todos os usuários associados ao perfil imediatamente, removendo ou adicionando permissões.
 
-#### [005_UsuarioAdmin](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/005_UsuarioAdmin.ts)
+#### 005_UsuarioAdmin
 
 Este seeder cria um usuário admin master com email e senha padrões. Este pode ser alterado para o email e senha que preferir:
 
@@ -216,14 +216,14 @@ Este seeder cria um usuário admin master com email e senha padrões. Este pode 
 }
 ```
 
-#### [006_PermissoesAdmin](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/006_PermissoesAdmin.ts)
+#### 006_PermissoesAdmin
 
 Este seeder dá permissões para todos os módulos cadastrados no seeder `001_Modulos` ao usuário Admin. Note que estas permissões são salvas com a coluna `permissao_fixada = 1`, ou seja, este usuário não precisa de um perfil. As permissões são adicionadas diretamente e permanecerão mesmo que ele seja associado a um perfil.
 
     Note que, se você alterou o email do usuário Admin no seeder anterior, deverá ajustar
     neste seeder, pois é pelo email que o usuário é buscado no banco.
 
-#### [007_ItensMenu](https://bitbucket.org/padrao-paineis-web-quaestum/api-projeto/raw/beee4d17bf1b9f82cd2208de9039d7059323c739/database/seeders/007_ItensMenu.ts)
+#### 007_ItensMenu
 
 Este seeder cadastra os itens de menu padrão do sistema, configurados com permissões necessárias para poderem ser visualizados no frontend.
 
@@ -556,4 +556,3 @@ export default class User {
 Saiba mais sobre tratamento de erros no AdonisJS [aqui](https://v5-docs.adonisjs.com/guides/exception-handling#handling-exceptions-globally)
 
 A classe `app/Exceptions/Handler` é responsável por tratar as exeções lançadas globalmente pela API. Por isso, não use try-catch a menos que queira capturar erros específicos do seu caso de uso. Nos demais casos, deixe que a operação lance erros sem capturá-los. É possível adicionar códigos de erros conhecidos no objeto `ErrorResponsesByCode` definido dentro da classe (ex: 'E_ROUTE_NOT_FOUND', 'E_VALIDATION_FAILURE'). Verifique a classe para saber mais como os erros são formatados e enviados de volta para a requisição.
-
