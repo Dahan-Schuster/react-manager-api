@@ -29,43 +29,39 @@ export default class ExceptionHandler extends HttpExceptionHandler {
     super(Logger);
   }
 
+  /**
+   * Objeto de erros por nome do código
+   * Cada chave deve corresponder a um erro que pode ser lançado na aplicação
+   * Cada valor deve ser uma função que recebe o erro e o contexto HTTP (ambos opcionais),
+   * e retorna um array em que a primeira posição deve ser o código HTTP e a segunda o objeto de resposta
+   *
+   * Qualquer chave colocada no objeto de resposta será retornada ao usuário pela requisição
+   */
   private ErrorResponsesByCode: Map<
     string,
-    (error?: any) => [number, ErrorResponse]
+    (error?: any, ctx?: HttpContextContract) => [number, ErrorResponse]
   > = new Map()
-    .set("E_UNAUTHORIZED_ACCESS", () => [
+    .set("E_UNAUTHORIZED_ACCESS", () => [401, { success: false, error: "Usuário não autenticado" }])
+    .set("E_VALIDATION_FAILURE", (error: { messages: { errors: { message: any }[] } }) => [
+      422,
+      {
+        success: false,
+        error: error.messages.errors[0].message,
+        ...error.messages,
+      },
+    ])
+    .set("E_ROUTE_NOT_FOUND", () => [404, { success: false, error: "Rota não encontrada" }])
+    .set("E_ROW_NOT_FOUND", () => [404, { success: false, error: "Registro não encontrado" }])
+    .set("ER_NO_REFERENCED_ROW_2", () => this.ErrorResponsesByCode.get("E_ROW_NOT_FOUND")!())
+    .set("ER_DUP_ENTRY", () => [409, { success: false, error: "Registro duplicado" }])
+    .set("ER_NO_SUCH_TABLE", () => [500, { success: false, error: "Tabela não encontrada" }])
+    .set("ERR_JWS_INVALID", (_e: any, ctx: HttpContextContract) => [
       401,
-      { success: false, error: "Usuário não autenticado" },
-    ])
-    .set(
-      "E_VALIDATION_FAILURE",
-      (error: { messages: { errors: { message: any }[] } }) => [
-        422,
-        {
-          success: false,
-          error: error.messages.errors[0].message,
-          ...error.messages,
-        },
-      ]
-    )
-    .set("E_ROUTE_NOT_FOUND", () => [
-      404,
-      { success: false, error: "Rota não encontrada" },
-    ])
-    .set("E_ROW_NOT_FOUND", () => [
-      404,
-      { success: false, error: "Registro não encontrado" },
-    ])
-    .set("ER_NO_REFERENCED_ROW_2", () =>
-      this.ErrorResponsesByCode.get("E_ROW_NOT_FOUND")!()
-    )
-    .set("ER_DUP_ENTRY", () => [
-      409,
-      { success: false, error: "Registro duplicado" },
-    ])
-    .set("ER_NO_SUCH_TABLE", () => [
-      500,
-      { success: false, error: "Tabela não encontrada" },
+      {
+        success: false,
+        error: "Token de autenticação inválido ou não informado",
+        token: ctx?.request?.header("authorization"), // retorna o token para o usuário ver o que falhou
+      },
     ]);
 
   private defaultHandler = (): [number, ErrorResponse] => [
@@ -73,6 +69,9 @@ export default class ExceptionHandler extends HttpExceptionHandler {
     { success: false, error: "Erro desconhecido" },
   ];
 
+  /**
+   * Método chamado pelo Adonis, reponsável por tratar exceções globais
+   */
   public async handle(error: any, ctx: HttpContextContract) {
     if (error instanceof ApiError) {
       return ctx.response.status(error.code).send({
@@ -80,13 +79,15 @@ export default class ExceptionHandler extends HttpExceptionHandler {
         error: error.message,
       });
     } else {
-      const handler =
-        this.ErrorResponsesByCode.get(error.code) || this.defaultHandler;
-      const [httpCode, errorResponse] = handler(error);
+      const handler = this.ErrorResponsesByCode.get(error.code) || this.defaultHandler;
+      const [httpCode, errorResponse] = handler(error, ctx);
       return ctx.response.status(httpCode).send(errorResponse);
     }
   }
 
+  /**
+   * Método chamado pelo Adonis, responsável por informar o erro
+   */
   public async report(exception: any, { logger }: HttpContextContract) {
     if (exception instanceof ApiError) {
       this.logApiError(exception, logger);
@@ -95,10 +96,7 @@ export default class ExceptionHandler extends HttpExceptionHandler {
     }
   }
 
-  private logApiError(
-    exception: ApiError,
-    logger: HttpContextContract["logger"]
-  ) {
+  private logApiError(exception: ApiError, logger: HttpContextContract["logger"]) {
     const { code, message } = exception;
     if (code >= 500) {
       logger.error({ message, code, err: exception }, "Erro do servidor");
@@ -107,12 +105,8 @@ export default class ExceptionHandler extends HttpExceptionHandler {
     }
   }
 
-  private logDefaultError(
-    exception: any,
-    logger: HttpContextContract["logger"]
-  ) {
-    const handler =
-      this.ErrorResponsesByCode.get(exception.code) || this.defaultHandler;
+  private logDefaultError(exception: any, logger: HttpContextContract["logger"]) {
+    const handler = this.ErrorResponsesByCode.get(exception.code) || this.defaultHandler;
     const [httpCode, errorResponse] = handler(exception);
     if (httpCode >= 500) {
       logger.error({ code: httpCode, err: exception }, errorResponse.error);
