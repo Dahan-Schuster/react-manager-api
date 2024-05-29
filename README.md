@@ -33,7 +33,7 @@ Um ponto inicial para APIs RESTFUL feito com Nodejs, AdonisJse Lucid. Inclui rot
 
 ## Instalação
 
-Para usar o template, clone o projeto e a remote primária:
+Para usar o template, clone o projeto e remova a remote primária:
 
 ```bash
   # aqui você pode passar o nome da pasta que desejar, para atender sua necessidade
